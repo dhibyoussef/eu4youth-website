@@ -1620,7 +1620,7 @@ body:has(.page--projet),
   overflow: hidden;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 2.45rem;
+  font-size: 2.1rem;
   line-height: 1.24;
   color: var(--ink);
 }

@@ -48,11 +48,18 @@
 .logos__cell:hover .logos__colour,
 .logos__cell:focus-visible .logos__colour {
   opacity: 1;
+  filter: brightness(1.1);
 }
 
 .logos__cell:hover .logos__grey,
 .logos__cell:focus-visible .logos__grey {
   opacity: 0;
+}
+
+.footer .logos__cell:hover .logos__footer,
+.footer .logos__cell:focus-visible .logos__footer {
+  filter: brightness(0) invert(1);
+  opacity: 1;
 }
 
 .logos__cell:focus-visible {
