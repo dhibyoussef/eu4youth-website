@@ -106,7 +106,7 @@
   width: 78.9rem;
   margin: 0;
   font-weight: 500;
-  font-size: 2.6rem;
+  font-size: 1.9rem;
   line-height: 1.5;
   text-align: right;
 }
@@ -343,7 +343,7 @@
     justify-self: stretch;
     align-self: end;
     margin: 0;
-    font-size: clamp(2.6rem, 1.5vw, 2.9rem);
+    font-size: clamp(1.7rem, 0.95vw, 2rem);
     line-height: 1.5;
     text-align: right;
     overflow-wrap: break-word;
