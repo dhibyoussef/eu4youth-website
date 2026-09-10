@@ -31,8 +31,9 @@ export default defineConfig(({ mode }) => {
     base,
     plugins: [react(), prefixPublicAssets(base)],
     server: {
-      port: 3030,
-      strictPort: true,
+      // Prefer the configured development port, but let Vite choose the next available port.
+      port: Number(env.VITE_PORT || env.PORT || 3030),
+      strictPort: false,
       proxy: {
         '/api': {
           target: 'http://localhost:8040',
