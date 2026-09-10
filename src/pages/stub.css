@@ -1,0 +1,50 @@
+.page--stub {
+  --pad-x: 7.5rem;
+  background: var(--white);
+  overflow-x: clip;
+}
+
+@media (min-width: 1100px) {
+  .page--stub {
+    --pad-x: 16rem;
+  }
+}
+
+.stub-title-row,
+.stub-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.page--stub .stub-pencil.cms-chip-only,
+.page--stub .stub-title-row .cms-chip-only,
+.page--stub .stub-btn-row .cms-chip-only {
+  position: static;
+  display: inline-grid;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+}
+
+.page--stub .stub-btn-row .btn:not(.cms-pencil) {
+  display: inline-flex;
+  align-items: center;
+}
+
+.stub-links-band,
+.stub-actions {
+  padding: 0 var(--pad-x) 6rem;
+}
+
+.stub-list-cms {
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1099px) {
+  .stub-links-band,
+  .stub-actions {
+    padding-inline: var(--gutter);
+  }
+}

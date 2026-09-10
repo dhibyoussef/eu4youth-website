@@ -1,0 +1,691 @@
+/* Header geometry taken from Accueil.pdf p1 (closed) and p2-p4 (open states).
+   Values are design px / 10 = rem on the 1920 canvas. */
+
+/* Inst bar + nav are siblings in the page flow so sticky nav can pin to the
+   viewport after the flags/logos bar scrolls away (display:contents drops the
+   wrapping box that otherwise dragged the sticky nav off-screen). */
+.header {
+  display: contents;
+  z-index: 100;
+}
+
+@media (max-width: 1099px) {
+  /* Mobile drawer needs a real header box for .header--menu-open. */
+  .header {
+    display: block;
+    position: relative;
+    z-index: 100;
+  }
+}
+
+/* ---- Institutional bar — scrolls away; not sticky ---- */
+.header__inst {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  min-height: 12rem;
+  padding: 0.6rem 2rem 1rem;
+  background: var(--white);
+}
+
+.header__logo {
+  position: absolute;
+  left: 3rem;
+  top: 1.6rem;
+  width: 20rem;
+  z-index: 3;
+}
+
+.header__flags {
+  display: none;
+}
+
+.header__locales,
+.nav__locales {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+}
+
+.header__locales {
+  position: absolute;
+  right: 26rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  color: var(--ink);
+}
+
+.header__locales li,
+.nav__locales li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.header__locales button,
+.nav__locales button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 140ms ease, color 140ms ease;
+}
+
+.header__locales button.is-on,
+.nav__locales button.is-on {
+  opacity: 1;
+}
+
+.header__locales button:hover,
+.header__locales button:focus-visible,
+.nav__locales button:hover,
+.nav__locales button:focus-visible {
+  opacity: 1;
+  outline: none;
+}
+
+.nav__locales {
+  color: #e8c96a;
+  font-size: 2.5rem;
+  gap: 0.6rem;
+  margin-left: 0.4rem;
+  flex: none;
+}
+
+.nav__locales button.is-on {
+  color: var(--white);
+}
+
+.nav__locales span {
+  opacity: 0.55;
+}
+
+@media (min-width: 1100px) {
+  /* Client: language selector lives on the blue menu, not the white bar. */
+  .header__locales {
+    display: none;
+  }
+
+  .nav__locales {
+    display: flex;
+  }
+}
+
+/* Hidden on desktop so it cannot leave an invisible hit target in the
+   institutional bar; responsive.css turns it into a grid control below 1100px. */
+.header__burger {
+  display: none;
+}
+
+/* ---- Primary bar: sticky nav only (flags / logos bar scrolls away) ---- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 11rem;
+  background: var(--eu-blue);
+}
+
+.nav__item {
+  position: static;
+}
+
+/* Open-state tab plate, painted behind the label. */
+.nav__tab {
+  position: absolute;
+  z-index: 1;
+}
+
+.nav__tab--orange {
+  background: var(--orange);
+}
+
+.nav__tab--white {
+  background: var(--white);
+}
+
+.nav__link {
+  position: absolute;
+  top: 3.2rem;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 2.4rem;
+  line-height: 1.12;
+  letter-spacing: 0.03em;
+  color: var(--white);
+  background: none;
+  border: 0;
+  white-space: nowrap;
+}
+
+.nav__link:has(.nav__label span:nth-child(2)) {
+  top: 1.8rem;
+}
+
+/* Two-line labels are centred over their own block, as drawn. */
+.nav__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Traced off the comp: 19 x 11 design px, 3.05px stroke with round caps. */
+.nav__chev {
+  width: 1.7rem;
+  height: 1rem;
+  flex: none;
+  margin-top: 0.7rem;
+  color: var(--orange);
+  transition: transform 160ms ease;
+}
+
+.nav__chev--up {
+  transform: rotate(180deg);
+}
+
+/* On a two-line label the comp sets the chevron beside the second line. The
+   gap is not the same as a one-line label's, and MÉDIAS is a shade looser than
+   ACTUALITÉS because its second line is shorter. */
+.nav__link:has(.nav__label span:nth-child(2)) {
+  gap: 0.3rem;
+}
+
+.nav__link:has(.nav__label span:nth-child(2)) .nav__chev {
+  margin-top: 1.35rem;
+}
+
+.nav__item:nth-child(6) .nav__link:has(.nav__label span:nth-child(2)) {
+  gap: 0.7rem;
+}
+
+/* When a white tab is behind the label the text flips to orange. */
+.nav__link.is-open {
+  color: var(--white);
+}
+
+.nav__item:has(.nav__tab--white) .nav__link.is-open {
+  color: var(--orange);
+}
+
+/* An orange chevron on the open orange tab would disappear, so it turns white
+   with the label; over the white tab it stays orange. */
+.nav__link.is-open .nav__chev {
+  color: var(--white);
+}
+
+.nav__item:has(.nav__tab--white) .nav__link.is-open .nav__chev {
+  color: var(--orange);
+}
+
+/* ---- Dropdown panels ---- */
+.nav__panel {
+  position: absolute;
+  z-index: 30;
+  box-shadow: 0 2rem 4.8rem rgb(0 0 0 / 18%);
+}
+
+.nav__panel--rows {
+  background: var(--orange);
+  overflow: hidden;
+}
+
+.nav__rows {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.nav__rows li {
+  flex: 1;
+  display: flex;
+  position: relative;
+}
+
+/* Row separators: inset hairlines between the orange rows. */
+.nav__rows li + li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 2.4rem;
+  right: 2.4rem;
+  height: 0.15rem;
+  background: var(--white);
+}
+
+.nav__rows a {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 2.4rem;
+  line-height: 1.12;
+  letter-spacing: 0.03em;
+  color: var(--white);
+  text-align: center;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+/* The row under the cursor takes the white plate with the orange label that the
+   comp draws on its first row. It follows the cursor rather than staying on the
+   first row: the comp can only draw one state at a time, and a highlight that
+   never moves reads as the menu being stuck. */
+.nav__rows a:hover,
+.nav__rows a:focus-visible {
+  background: var(--white);
+  color: var(--orange);
+  outline: none;
+}
+
+/* A white plate needs no hairline against the orange above or below it, which is
+   how the comp draws the join under its first row. */
+.nav__rows li:has(a:hover)::before,
+.nav__rows li:has(a:focus-visible)::before,
+.nav__rows li:has(a:hover) + li::before,
+.nav__rows li:has(a:focus-visible) + li::before {
+  content: none;
+}
+
+/* Full-bleed white panel carrying the six project logos. */
+.nav__panel--logos {
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* The six logos are the shared strip component, one link per logo at its own
+   measured cell — see components/project-logos.css. It replaced a flat image with
+   six equal-width hit areas laid over it, which tinted a sixth of the panel
+   regardless of which logo the cursor was actually on. */
+.nav__logos {
+  position: relative;
+  height: 100%;
+}
+
+/* ---- Utility icons: mail / search / language ---- */
+.nav__utils {
+  position: absolute;
+  right: 2.2rem;
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.nav__utils a,
+.nav__utils > button {
+  display: block;
+  width: 3.6rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--orange);
+  transition: opacity 160ms ease;
+}
+
+.nav__utils .nav__locales {
+  color: #e8c96a;
+  font-size: 2.6rem;
+  gap: 0.9rem;
+  margin-left: 0.5rem;
+  flex: none;
+  width: auto;
+  min-width: 14rem;
+  justify-content: flex-end;
+}
+
+.nav__utils .nav__locales button {
+  width: auto;
+  min-width: 3.6rem;
+  padding: 0.3rem 0.45rem;
+  color: inherit;
+}
+
+.nav__utils a:hover,
+.nav__utils > button:hover {
+  opacity: 0.72;
+}
+
+.nav__utils > button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* The globe stays in the rail so the layout matches the comp; the badge says the
+   translations are a later configuration step, not a broken control. Hover is on
+   the wrapper because a disabled button does not receive pointer events. */
+.nav__utils-lang {
+  position: relative;
+  display: block;
+}
+
+.nav__utils-lang-badge {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 0.6rem);
+  z-index: 2;
+  padding: 0.35rem 0.7rem;
+  border: 0.12rem solid var(--white);
+  color: var(--white);
+  background: var(--eu-blue);
+  font: 700 1.1rem/1 var(--font-ui);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.nav__utils-lang:hover .nav__utils-lang-badge,
+.nav__utils-lang:focus-within .nav__utils-lang-badge {
+  opacity: 1;
+}
+
+.header-search {
+  position: relative;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: auto minmax(40rem, 90rem);
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  padding: 3rem 8rem;
+  color: var(--white);
+  background: var(--eu-blue-deep);
+}
+
+.header-search > label {
+  font: 700 2.3rem var(--font-ui);
+}
+
+.header-search > div {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+}
+
+.header-search input {
+  min-height: 6rem;
+  padding: 0 2rem;
+  border: 0;
+  color: var(--ink);
+  background: var(--white);
+  font: 600 2.2rem var(--font-ui);
+}
+
+.header-search button {
+  min-width: 17rem;
+  padding: 0 2rem;
+  color: var(--eu-blue);
+  background: var(--orange);
+  font: 700 2.1rem var(--font-ui);
+}
+
+.header-search .header-search__close {
+  min-width: 6rem;
+  padding: 0;
+  color: var(--white);
+  background: transparent;
+  font-size: 4rem;
+}
+
+@media (max-width: 1099px) {
+  .header-search {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 3rem var(--gutter);
+  }
+}
+
+@media (max-width: 599px) {
+  .header-search > div {
+    grid-template-columns: 1fr auto;
+  }
+
+  .header-search button {
+    min-width: 0;
+  }
+
+  .header-search .header-search__close {
+    grid-column: 1 / -1;
+    min-height: 5rem;
+  }
+}
+
+/* Desktop: one equal slot per item so gaps stay even. PDF x-coordinates stay
+   on the markup as a mobile fallback. */
+@media (min-width: 1100px) {
+  .header__logo {
+    left: 1.56%;
+  }
+
+  .header__flags {
+    right: 0.52%;
+    left: auto;
+  }
+
+  .nav {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    height: 16rem;
+    padding: 0 0.8rem 0 0.4rem;
+    overflow: visible;
+    gap: 0;
+  }
+
+  .nav__item {
+    position: relative;
+    flex: 1 1 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    min-width: 0;
+  }
+
+  .nav__item:has(.nav__panel--logos) {
+    position: static;
+  }
+
+  .nav__tab {
+    display: none;
+  }
+
+  .nav__link {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem !important;
+    width: 100%;
+    height: 100%;
+    padding: 1.6rem 0.5rem;
+    font-size: 3.2rem;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .nav__link:has(.nav__label span:nth-child(2)) {
+    top: auto !important;
+    gap: 0.4rem !important;
+    font-size: 2.95rem;
+    line-height: 1.12;
+    white-space: normal;
+    padding: 1.4rem 0.35rem;
+  }
+
+  .nav__item:nth-child(6) .nav__link:has(.nav__label span:nth-child(2)) {
+    gap: 0.45rem !important;
+  }
+
+  .nav__label {
+    align-items: center;
+    text-align: center;
+  }
+
+  .nav__chev,
+  .nav__link:has(.nav__label span:nth-child(2)) .nav__chev {
+    margin-top: 0;
+    align-self: center;
+    flex: none;
+    width: 2.2rem;
+    height: 1.3rem;
+  }
+
+  .nav__link.is-open {
+    background: var(--orange);
+    color: var(--white);
+  }
+
+  .nav__item:has(.nav__panel--logos) .nav__link.is-open {
+    background: var(--white);
+    color: var(--orange);
+  }
+
+  .nav__panel {
+    top: 100% !important;
+  }
+
+  .nav__panel--rows {
+    left: 0 !important;
+    width: max-content !important;
+    min-width: 100%;
+    max-width: min(36rem, 42vw);
+    height: auto !important;
+  }
+
+  .nav__panel--rows .nav__rows {
+    height: auto;
+  }
+
+  .nav__panel--rows .nav__rows li {
+    flex: none;
+    min-height: 6.4rem;
+  }
+
+  .nav__panel--rows .nav__rows a {
+    padding: 1.8rem 2.4rem;
+    font-size: 3.2rem;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .nav__item--programme {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: stretch;
+  }
+
+  .nav__item--programme .nav__link {
+    width: 100%;
+    padding: 0 0.55rem;
+  }
+
+  /* Programme rail: same width as the PROGRAMME tab (1 equal nav slot).
+     Do NOT use max-content — long labels (MÉCANISMES D'APPUI) would widen the
+     orange column past the hero inset and paint over the title. */
+  .nav__item--programme .nav__panel--rows,
+  .nav__item:first-child .nav__panel--rows {
+    left: 0 !important;
+    right: auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-shadow: none;
+  }
+
+  .nav__item--programme .nav__panel--rows .nav__rows li,
+  .nav__item:first-child .nav__panel--rows .nav__rows li {
+    min-height: 0;
+  }
+
+  .nav__item--programme .nav__panel--rows .nav__rows a,
+  .nav__item:first-child .nav__panel--rows .nav__rows a {
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+    font-size: 3.2rem;
+    letter-spacing: 0.04em;
+    padding: 1.8rem 1.2rem;
+    line-height: 1.1;
+  }
+
+  .nav__panel--logos {
+    left: 0 !important;
+    width: 100% !important;
+  }
+
+  .nav__utils {
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+    flex: 0 0 auto;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 0 1.2rem 0 0.8rem;
+  }
+
+  .nav__utils a,
+  .nav__utils > button {
+    width: 4.6rem;
+  }
+
+  .nav__locales {
+    display: flex !important;
+    font-size: 2.8rem;
+    gap: 0.75rem;
+    margin-left: 0.3rem;
+  }
+
+  .header__locales {
+    display: none !important;
+  }
+
+  .nav__logos .logos__cell {
+    left: calc(var(--cell-x) * 100% / 1920) !important;
+    width: calc(var(--cell-w) * 100% / 1920) !important;
+  }
+
+  .nav__link:not(:has(.nav__chev)):hover,
+  .nav__link:not(:has(.nav__chev)):focus-visible {
+    color: var(--orange);
+    outline: none;
+  }
+
+  .nav__link[aria-current='page'] .nav__label {
+    padding-bottom: 0.4rem;
+    border-bottom: 0.35rem solid var(--orange);
+  }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 340" fill="none">
+  <!-- Three stylised people — projet.pdf HISTOIRE DU MOIS watermark -->
+  <g fill="#e8a0b4">
+    <circle cx="78" cy="52" r="36"/>
+    <path d="M18 118c0-28 27-50 60-50s60 22 60 50v162c0 22-18 40-40 40H58c-22 0-40-18-40-40V118z"/>
+    <circle cx="230" cy="40" r="40"/>
+    <path d="M158 112c0-32 32-58 72-58s72 26 72 58v178c0 24-20 44-44 44h-56c-24 0-44-20-44-44V112z"/>
+    <circle cx="382" cy="52" r="36"/>
+    <path d="M322 118c0-28 27-50 60-50s60 22 60 50v162c0 22-18 40-40 40h-40c-22 0-40-18-40-40V118z"/>
+  </g>
+</svg>

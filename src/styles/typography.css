@@ -1,0 +1,23 @@
+/* Optional type tokens — pages set their own heading sizes locally.
+   No global .page h1–h4 font-size overrides (they blew up card / stream titles). */
+
+:root {
+  --type-h1: clamp(5.4rem, 5.6vw, 8.6rem);
+  --type-h2: clamp(4.8rem, 5.2vw, 7.4rem);
+  --type-h3: clamp(3.6rem, 3.8vw, 5.8rem);
+  --type-h4: clamp(3rem, 3.2vw, 4.4rem);
+  /* One size for home band titles (EU4YOUTH EN CHIFFRES and siblings). */
+  --home-section-title: 9.2rem;
+}
+
+/* Multi-line heroes and section titles: child spans inherit the parent heading size. */
+.page :is(h1, h2, h3, h4) span:not(.cms-chip-only):not(.cms-pencil) {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Band undertitles — same size as section titles (not the smaller type-h3). */
+.page :is(p.projets__subtitle, p.map__subtitle) {
+  font-size: var(--home-section-title);
+  line-height: 1.35;
+}

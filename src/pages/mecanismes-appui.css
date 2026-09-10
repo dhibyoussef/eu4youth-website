@@ -1,0 +1,604 @@
+.page--mechanisms {
+  --bleed: 0px;
+  --pad-x: 16rem;
+  --mechanisms-left: var(--pad-x, var(--gutter));
+  --mechanisms-right: var(--pad-x, var(--gutter));
+  overflow-x: clip;
+}
+
+.page--mechanisms .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.page--mechanisms .cms-editable {
+  position: relative;
+}
+
+.mec-edit-region {
+  position: relative;
+}
+
+.page--mechanisms .mec-list-cms {
+  display: contents;
+}
+
+.page--mechanisms .cms-list-trigger {
+  white-space: nowrap;
+  width: max-content;
+  max-width: none;
+}
+
+body.cms-editing .page--mechanisms .mec-edit-region {
+  outline: 1.5px dashed rgba(242, 168, 73, 0.85);
+  outline-offset: 8px;
+}
+
+body.cms-editing .page--mechanisms .mec-edit-region .cms-list-trigger-wrap {
+  position: static;
+  top: auto;
+  right: auto;
+  margin: 0 0 1.6rem auto;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.mec-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.2rem;
+  max-width: 100%;
+}
+
+.mec-btn-edit {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.page--mechanisms .mec-pencil.cms-chip-only,
+.page--mechanisms .mec-title-row .cms-chip-only,
+.page--mechanisms .mec-btn-edit .cms-chip-only,
+.page--mechanisms .mec-filter-pencils .cms-chip-only,
+.page--mechanisms .mec-card-link-edit .cms-chip-only {
+  position: static;
+  display: inline-grid;
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
+
+.mec-filter-pencils,
+.mec-card-link-edit {
+  margin: 0 0 1.2rem;
+}
+
+body:not(.cms-editing) .mec-filter-pencils,
+body:not(.cms-editing) .mec-card-link-edit {
+  display: none;
+}
+
+.mechanisms-hero {
+  position: relative;
+  display: block;
+  min-height: 0;
+  padding: 8.5rem var(--mechanisms-right) 8.5rem var(--mechanisms-left);
+  color: var(--white);
+  background: var(--pink);
+  overflow: hidden;
+  text-align: left;
+}
+
+.mechanisms-hero::after {
+  position: absolute;
+  right: -5rem;
+  bottom: -14rem;
+  content: "EU4Y";
+  color: rgb(255 255 255 / 10%);
+  font: 700 35rem/0.78 var(--font-display);
+  letter-spacing: -3rem;
+  writing-mode: vertical-rl;
+}
+
+.mechanisms-hero__mark {
+  position: absolute;
+  right: 15rem;
+  top: 7rem;
+  color: rgb(255 255 255 / 10%);
+  font: 700 16rem/0.72 var(--font-display);
+}
+
+.mechanisms-hero .mechanisms-title-row,
+.mechanisms-hero h1 {
+  position: relative;
+  z-index: 1;
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+  justify-content: flex-start !important;
+  margin-inline: 0 !important;
+  text-align: left !important;
+  letter-spacing: -0.08rem;
+  line-height: 1.12;
+  font-size: clamp(6.4rem, 7.5vw, 11rem);
+}
+
+.mechanisms-hero h1 span:not(.cms-chip-only):not(.cms-pencil) {
+  display: block;
+}
+
+.mechanisms-browser {
+  padding: 7rem var(--mechanisms-right) 14rem var(--mechanisms-left);
+}
+
+.mechanisms-intro {
+  display: grid;
+  align-items: center;
+  grid-template-columns: minmax(0, 1fr) auto 30rem;
+  gap: 3rem;
+  margin-bottom: 6rem;
+  padding: 3rem 4rem;
+  border-left: 1.2rem solid var(--pink);
+  background: var(--grey-card);
+}
+
+.mechanisms-intro p {
+  font-size: 3rem;
+  line-height: 1.55;
+  text-align: justify;
+  text-align-last: left;
+}
+
+.mechanisms-intro__figure {
+  color: var(--pink);
+  font: 700 7rem/1 var(--font-display);
+}
+
+.mechanisms-intro__count {
+  color: var(--eu-blue);
+  font: 700 2.1rem/1.15 var(--font-ui);
+  text-transform: uppercase;
+}
+
+.mechanisms-projects {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 100%;
+  margin-bottom: 4rem;
+}
+
+.mechanisms-projects button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 6.5rem;
+  padding: 1.2rem 1.5rem;
+  border: 0.2rem solid var(--mechanism-project, var(--eu-blue));
+  color: var(--mechanism-project, var(--eu-blue));
+  background: var(--white);
+  font: 700 1.6rem var(--font-ui);
+  text-align: left;
+  cursor: pointer;
+}
+
+.mechanisms-projects button strong {
+  font-size: 2rem;
+}
+
+.mechanisms-projects button:hover,
+.mechanisms-projects button.is-active {
+  color: var(--white);
+  background: var(--mechanism-project, var(--eu-blue));
+}
+
+.mechanisms-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(2, minmax(28rem, 1fr));
+  gap: 3rem;
+}
+
+.mechanisms-search > span,
+.mechanisms-filter > span {
+  display: block;
+  margin-bottom: 1rem;
+  color: var(--eu-blue);
+  font: 700 2.1rem var(--font-ui);
+  text-transform: uppercase;
+}
+
+.mechanisms-search > div {
+  position: relative;
+}
+
+.mechanisms-search > div,
+.mechanisms-filter select {
+  border-left: 1.2rem solid var(--pink);
+  background: var(--grey-field);
+}
+
+.mechanisms-search input,
+.mechanisms-filter select {
+  width: 100%;
+  min-height: 7rem;
+  padding: 1.3rem 6rem 1.3rem 2rem;
+  border: 0;
+  background: transparent;
+  font: 500 2.1rem var(--font-body);
+}
+
+.mechanisms-search b {
+  position: absolute;
+  right: 2rem;
+  top: 0.6rem;
+  color: var(--pink);
+  font: 700 4.6rem var(--font-ui);
+}
+
+.mechanisms-results__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 4rem 0 3rem;
+  color: var(--eu-blue);
+  font-size: 2.2rem;
+}
+
+.mechanisms-results__head button {
+  border-bottom: 0.2rem solid var(--pink);
+  color: var(--pink);
+  font: 700 1.9rem var(--font-ui);
+}
+
+.mechanisms-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3rem;
+}
+
+.mechanism-card {
+  height: 100%;
+  border: 0.2rem solid var(--grey-rule);
+  background: var(--white);
+}
+
+.mechanism-card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: 12rem;
+  padding: 2rem 2.5rem;
+  border-bottom: 0.8rem solid var(--mechanism-accent, var(--pink));
+  background: var(--grey-card);
+}
+
+.mechanism-card > header img {
+  width: 16rem;
+  height: 8rem;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.mechanism-card > header span {
+  color: var(--mechanism-accent, var(--pink));
+  font: 700 2rem var(--font-ui);
+  text-align: right;
+}
+
+.mechanism-card__body {
+  padding: 3rem;
+}
+
+.mechanism-card__body > small {
+  color: #d8dfe7;
+  font: 700 5rem/1 var(--font-display);
+}
+
+.mechanism-card h2 {
+  margin-top: 1rem;
+  color: var(--eu-blue);
+  font-size: 3.1rem;
+  line-height: 1.3;
+}
+
+.mechanism-card h3 {
+  margin-top: 1.2rem;
+  color: var(--mechanism-accent, var(--pink));
+  font: 700 2.7rem/1.35 var(--font-ui);
+}
+
+.mechanism-card__body > p {
+  margin-top: 2rem;
+  font-size: 3rem;
+  line-height: 1.55;
+  text-align: justify;
+  text-align-last: left;
+}
+
+.mechanism-card__results {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 0.2rem solid var(--grey-rule);
+}
+
+.mechanism-card__results li {
+  position: relative;
+  padding-left: 2rem;
+  font-size: 2.6rem;
+  line-height: 1.45;
+}
+
+.mechanism-card__results li + li {
+  margin-top: 0.8rem;
+}
+
+.mechanism-card__results li::before {
+  position: absolute;
+  left: 0;
+  content: "•";
+  color: var(--mechanism-accent, var(--pink));
+}
+
+.mechanism-card__sectors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.5rem;
+}
+
+.mechanism-card__sectors span {
+  padding: 0.7rem 1rem;
+  color: var(--eu-blue);
+  background: #eaf2fc;
+  font: 700 1.6rem var(--font-ui);
+}
+
+.mechanism-card a {
+  display: inline-block;
+  margin-top: 2.5rem;
+  padding: 1.2rem 1.8rem;
+  color: var(--white);
+  background: var(--mechanism-accent, var(--pink));
+  font: 700 1.9rem var(--font-ui);
+}
+
+.mechanism-card a:hover {
+  background: var(--eu-blue);
+}
+
+.mechanisms-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+}
+
+/* The darker pink of the palette, which is the one the guideline reserves for pink
+   type on white; the brand pink came out pale enough on the white band that the
+   control read as disabled. */
+.mechanisms-more button {
+  min-height: 6rem;
+  padding: 1.2rem 2.4rem;
+  border: 0.3rem solid var(--pink-text);
+  color: var(--pink-text);
+  background: var(--white);
+  font: 700 1.9rem var(--font-ui);
+  cursor: pointer;
+}
+
+.mechanisms-more button:hover {
+  color: var(--white);
+  background: var(--pink-text);
+}
+
+.mechanisms-empty {
+  padding: 10rem 4rem;
+  background: var(--grey-card);
+  text-align: center;
+}
+
+.mechanisms-empty strong {
+  display: block;
+  color: var(--eu-blue);
+  font: 700 4rem var(--font-display);
+}
+
+.mechanisms-empty button {
+  margin-top: 2.5rem;
+  padding: 1.3rem 2rem;
+  color: var(--white);
+  background: var(--pink);
+  font: 700 1.8rem var(--font-ui);
+}
+
+.mechanisms-cta {
+  display: grid;
+  align-items: center;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6rem;
+  padding: 8rem var(--mechanisms-right) 9rem var(--mechanisms-left);
+  color: var(--white);
+  background: var(--eu-blue);
+  border-bottom: 0.2rem solid rgb(255 255 255 / 22%);
+}
+
+.mechanisms-cta p {
+  margin-bottom: 1rem;
+  color: var(--pink);
+  font: 700 2rem var(--font-ui);
+}
+
+.mechanisms-cta h2 {
+  font-size: 6rem;
+  line-height: 0.95;
+}
+
+.mechanisms-cta__body {
+  display: block;
+  margin-top: 2rem;
+  font-size: 2rem;
+}
+
+.mechanisms-cta nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.mechanisms-cta a {
+  padding: 1.5rem 2rem;
+  border: 0.2rem solid var(--white);
+  color: var(--eu-blue);
+  background: var(--white);
+  font: 700 1.8rem var(--font-ui);
+}
+
+.mechanisms-cta .mec-btn-edit:last-child a {
+  color: var(--white);
+  background: transparent;
+}
+
+@media (max-width: 1099px) {
+  .page--mechanisms {
+    --bleed: 0px;
+    --pad-x: var(--gutter);
+  }
+
+  .mechanisms-hero h1,
+  .mechanisms-hero .mechanisms-title-row {
+    font-size: clamp(3.6rem, 6vw, 5.2rem);
+    letter-spacing: -0.08rem;
+    line-height: 1.08;
+  }
+
+  .mechanisms-projects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mechanisms-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mechanisms-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mechanisms-search {
+    grid-column: 1 / -1;
+  }
+
+  .mechanisms-cta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 599px) {
+  .page--mechanisms {
+    --pad-x: var(--gutter);
+  }
+
+  .mechanisms-hero {
+    min-height: 0;
+    padding-top: 6rem;
+  }
+
+  .mechanisms-hero h1,
+  .mechanisms-hero .mechanisms-title-row {
+    font-size: clamp(2.8rem, 8vw, 3.6rem);
+    letter-spacing: -0.08rem;
+  }
+
+  .mechanisms-intro,
+  .mechanisms-controls,
+  .mechanisms-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mechanisms-projects {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+    padding: 0 0 1rem;
+    overflow: visible;
+    mask-image: none;
+  }
+
+  .mechanisms-projects button {
+    flex: 1 1 calc(50% - 1rem);
+    min-width: 0;
+    min-height: 5.6rem;
+    font-size: 1.5rem;
+    scroll-snap-align: start;
+  }
+
+  .mechanisms-intro {
+    gap: 1rem;
+  }
+
+  .mechanisms-intro p,
+  .mechanism-card__body > p {
+    font-size: 1.65rem;
+    line-height: 1.55;
+  }
+
+  .mechanism-card h2 {
+    font-size: clamp(1.9rem, 5vw, 2.2rem);
+  }
+
+  .mechanism-card__results li {
+    font-size: 1.55rem;
+  }
+
+  .mechanisms-intro__count {
+    font-size: 1.5rem;
+  }
+
+  .mechanisms-search {
+    grid-column: auto;
+  }
+
+  .mechanisms-search > span,
+  .mechanisms-filter > span {
+    font-size: 1.55rem;
+  }
+
+  .mechanisms-search input,
+  .mechanisms-filter select {
+    min-height: 5.2rem;
+    font-size: 1.6rem;
+  }
+
+  .mechanisms-cta {
+    padding-top: 4.8rem;
+  }
+
+  .mechanisms-cta h2 {
+    font-size: clamp(2.4rem, 7vw, 3.2rem);
+  }
+
+  .mechanisms-cta__body {
+    font-size: 1.65rem;
+    line-height: 1.45;
+  }
+
+  .mechanisms-cta nav {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .mechanisms-cta a {
+    text-align: center;
+  }
+}

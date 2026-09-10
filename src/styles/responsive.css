@@ -1,0 +1,1550 @@
+/* Narrow-viewport layout.
+   ============================================================================
+   The comps are a 1920px canvas and the build reproduces them by placing every
+   element at its measured coordinate, with the root font-size pinned to
+   100vw/192 so 1rem is always 10 design px. That scales the page as one piece
+   and keeps it exact, but it scales the type down with everything else: at 768px
+   the root is 4px, so 24 design px of body copy renders at under 10px. The design
+   holds together down to roughly 1100px and stops being readable below it.
+
+   So below 1100px this file does two things. It pins the root font-size to a
+   legible size instead of a proportional one, and it takes the bands out of
+   absolute placement and back into normal flow, in DOM order — which is already
+   the reading order, because each band was built top to bottom from the comp.
+
+   Everything here is scoped inside the media query, so the design width is
+   untouched and stays pixel-exact. The !important flags are not decoration: the
+   comp's coordinates for the KPIs, the project logos and the stream columns are
+   carried as inline styles, and a stylesheet cannot outrank those without them. */
+
+@media (max-width: 1099px) {
+  html {
+    --zoom: 1;
+    --canvas-offset: 0px;
+    --gutter: clamp(16px, 5.5vw, 32px);
+    --band-gap: 4.8rem;
+    /* Readable reflow root — independent of the desktop rem canvas. */
+    font-size: 10px;
+  }
+
+  body {
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Keep overflow off .app-shell so sticky nav can pin; clip on page/main. */
+  .app-shell {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .page,
+  main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  img,
+  svg,
+  video {
+    max-width: 100%;
+  }
+
+  /* Inner pages pin 70–240px of desktop inset even after --canvas-offset is
+     zeroed. Collapse those tokens so copy uses the same gutter as the home bands. */
+  .page {
+    --canvas: 100%;
+    --bleed: 0px;
+    --pj-bleed: 0px;
+    --map-bleed: 0px;
+    --obj-bleed: 0px;
+    --gov-bleed: 0px;
+    --fin-bleed: 0px;
+    --detail-bleed: 0px;
+    --search-bleed: 0px;
+    --ps-bleed: 0px;
+    --contact-left: var(--gutter);
+    --contact-right: var(--gutter);
+    --pub-left: var(--gutter);
+    --pub-right: var(--gutter);
+    --news-left: var(--gutter);
+    --news-right: var(--gutter);
+    --op-left: var(--gutter);
+    --op-right: var(--gutter);
+    --plan-left: var(--gutter);
+    --plan-right: var(--gutter);
+    --agenda-left: var(--gutter);
+    --agenda-right: var(--gutter);
+    --stories-left: var(--gutter);
+    --stories-right: var(--gutter);
+    --legal-left: var(--gutter);
+    --legal-right: var(--gutter);
+    --mechanisms-left: var(--gutter);
+    --mechanisms-right: var(--gutter);
+    --gloss-left: var(--gutter);
+    --gloss-right: var(--gutter);
+    --media-left: var(--gutter);
+    --media-right: var(--gutter);
+    --eu-tn-left: var(--gutter);
+    --eu-tn-right: var(--gutter);
+    --partners-left: var(--gutter);
+    --partners-right: var(--gutter);
+    --pj-left: var(--gutter);
+    --pj-right: var(--gutter);
+    --map-left: var(--gutter);
+    --map-right: var(--gutter);
+    --obj-left: var(--gutter);
+    --obj-right: var(--gutter);
+    --gov-left: var(--gutter);
+    --gov-right: var(--gutter);
+    --fin-left: var(--gutter);
+    --fin-right: var(--gutter);
+    --ps-left: var(--gutter);
+    --ps-right: var(--gutter);
+    --pad-x: var(--gutter);
+    --detail-gutter: var(--gutter);
+    --search-gutter: var(--gutter);
+  }
+
+  .sheet,
+  .pj-sheet,
+  .contact-dialog {
+    width: 100%;
+    max-width: 100%;
+    padding: var(--gutter);
+    overflow-x: hidden;
+    overflow-y: auto;
+    justify-items: stretch;
+  }
+
+  .sheet__card,
+  .pj-sheet__card,
+  .contact-dialog__card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    zoom: 1 !important;
+  }
+
+  h1,
+  h2,
+  h3 {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
+  .footer__col h2,
+  .footer__col a,
+  .kpi__value {
+    white-space: normal;
+  }
+
+  .news-hero h1,
+  .op-hero h1,
+  .gloss-hero h1,
+  .stories-hero h1,
+  .media-hero h1,
+  .eu-tn-hero h1,
+  .agenda-hero h1,
+  .partners-hero h1,
+  .legal-hero h1,
+  .mechanisms-hero h1,
+  .contact-hero h1,
+  .pub-hero h1,
+  .plan-hero h1,
+  .content-detail__hero h1,
+  .search-page__hero h1,
+  .map-hero h1,
+  .obj-hero h1,
+  .gov-hero h1,
+  .fin-hero h1,
+  .ps-hero h1,
+  .pj-hero h1,
+  .ap-hero__title {
+    letter-spacing: -0.12rem;
+    line-height: 1.08;
+  }
+
+  .stories-hero__copy > p,
+  .media-hero__copy > p,
+  .legal-hero > p,
+  .eu-tn-hero__copy > p {
+    max-width: none;
+    width: 100%;
+  }
+
+  /* ---------------------------------------------------------------- chrome ---- */
+
+  .header {
+    position: relative;
+    height: auto;
+  }
+
+  .header__inst {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: flex-start;
+    gap: var(--gutter);
+    height: auto;
+    min-height: 0;
+    padding:
+      max(2.4rem, env(safe-area-inset-top, 0px))
+      max(var(--gutter), env(safe-area-inset-right, 0px))
+      2.4rem
+      max(var(--gutter), env(safe-area-inset-left, 0px));
+  }
+
+  .header__logo,
+  .header__logo img {
+    position: static;
+    width: auto;
+    height: 6.4rem;
+  }
+
+  /* The lockup carries two governments' marks and small print; it survives being
+     shrunk but not being squeezed into a phone's width beside everything else. */
+  .header__flags,
+  .header__inst .funder-flags {
+    position: static;
+    right: auto;
+    top: auto;
+    width: auto;
+    height: auto;
+    margin-left: auto;
+    gap: 1.6rem;
+  }
+
+  .header__inst .funder-flags__item {
+    width: min(10.5rem, 40vw);
+  }
+
+  .header__inst .funder-flags__caption {
+    font-size: 0.98rem;
+    line-height: 1.3;
+  }
+
+  /* Project pages already show EU/TN in .pj-strip — drop the duplicate row. */
+  .app-shell:has(.pj-strip) .header__flags,
+  .app-shell:has(.pj-strip) .header__inst .funder-flags {
+    display: none;
+  }
+
+  .header__locales {
+    position: static;
+    order: 1;
+    margin-left: auto;
+    margin-right: 0.8rem;
+    font-size: 1.6rem;
+    transform: none;
+  }
+
+  .header__burger {
+    order: 2;
+    margin-left: 0;
+  }
+
+  .nav__locales {
+    display: none;
+  }
+
+  .header__burger {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 6.4rem;
+    height: 6.4rem;
+    padding: 0;
+    background: var(--eu-blue);
+    border: 0;
+    cursor: pointer;
+  }
+
+  /* Three bars from one element: the middle is the box, the outer two are its
+     shadows, so the control has a single hit area and no extra markup. */
+  .header__burger-bars,
+  .header__burger-bars::before,
+  .header__burger-bars::after {
+    display: block;
+    width: 3rem;
+    height: 0.3rem;
+    background: var(--white);
+    transition: transform 180ms ease, opacity 180ms ease;
+  }
+
+  .header__burger-bars::before,
+  .header__burger-bars::after {
+    content: '';
+    position: relative;
+  }
+
+  .header__burger-bars::before {
+    top: -0.95rem;
+  }
+
+  .header__burger-bars::after {
+    top: 0.65rem;
+  }
+
+  .header--menu-open .header__burger-bars {
+    background: transparent;
+  }
+
+  .header--menu-open .header__burger-bars::before {
+    top: -0.3rem;
+    transform: rotate(45deg);
+  }
+
+  .header--menu-open .header__burger-bars::after {
+    top: -0.6rem;
+    transform: rotate(-45deg);
+  }
+
+  /* The drawer. Closed it is genuinely absent rather than merely invisible, so it
+     takes no space and nothing inside it is reachable by keyboard.
+     Sticky is desktop-only; on narrow screens the drawer is in-flow under the burger. */
+  .nav {
+    position: static;
+    top: auto;
+    display: none;
+    height: auto;
+    padding: 0 0 2.4rem;
+    background: var(--eu-blue);
+  }
+
+  .header--menu-open .nav {
+    display: block;
+    max-height: min(78dvh, 72rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav__item {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    border-top: 0.1rem solid rgb(255 255 255 / 0.18);
+  }
+
+  .nav__link {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    width: 100%;
+    height: auto;
+    min-height: 4.8rem;
+    padding: 1.6rem var(--gutter);
+    font-size: 1.8rem;
+    white-space: normal;
+  }
+
+  .nav__label {
+    align-items: flex-start;
+    text-align: start;
+  }
+
+  .nav__chev,
+  .nav__link:has(.nav__label span:nth-child(2)) .nav__chev {
+    margin-top: 0;
+    align-self: center;
+  }
+
+  .nav__link:has(.nav__label span:nth-child(2)) {
+    align-items: center;
+    gap: 1.6rem;
+  }
+
+  .nav__tab {
+    display: none;
+  }
+
+  /* Panels open in the flow beneath their tab instead of over the page. */
+  .nav__panel {
+    position: static;
+    width: auto;
+    height: auto !important;
+    padding: 0;
+    background: rgb(0 0 0 / 0.14);
+    box-shadow: none;
+  }
+
+  .nav__rows {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+  }
+
+  .nav__rows li,
+  .nav__rows li + li::before {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    flex: none;
+  }
+
+  .nav__rows li + li::before {
+    display: none;
+  }
+
+  .nav__rows a {
+    position: static;
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 4.4rem;
+    height: auto;
+    padding: 1.2rem var(--gutter);
+    font-size: 1.7rem;
+    text-align: start;
+  }
+
+  .nav__rows a:hover,
+  .nav__rows a:focus-visible,
+  .nav__rows a[aria-current='page'] {
+    background: var(--white);
+    color: var(--orange);
+  }
+
+  .nav__logos {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 2rem var(--gutter);
+    background: var(--white);
+  }
+
+  /* Three across in the panel rather than the two the band uses: a drawer that
+     needs six scrolls to get past one menu entry is worse than small logos. */
+  .nav__logos .logos {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+  }
+
+  .nav__utils {
+    position: static;
+    display: flex;
+    gap: 3rem;
+    width: auto;
+    height: auto;
+    padding: 2.2rem var(--gutter);
+  }
+
+  /* --------------------------------------------------------------- bands ----- */
+
+  .band {
+    position: relative;
+    height: auto;
+    min-height: 0;
+    padding: var(--band-gap) var(--gutter);
+    overflow: hidden;
+  }
+
+  /* Positioning reset. Height is deliberately left alone: buttons, badges, rules
+     and card thumbnails all carry a measured height that is still correct once
+     they are in flow, and clearing it here would collapse them. */
+  /* :not(:is(...)) rather than a chain of :not()s. A chain counts each argument,
+     which would make this reset outrank the single-class rules further down and
+     stretch every button to the full measure; :is() contributes only its heaviest
+     argument, so one class. */
+  .band > *:not(:is(.band__art, .hero-carousel, .map__art, .map__pins)),
+  .band .kpi,
+  /* Not scoped to a band: the same logo strip is reused inside the nav's PROJETS
+     panel, and there it would keep its 1920 coordinates and spill across the rows
+     beneath it. */
+  .logos > li,
+  .logos__cell,
+  .band .stream,
+  .band .stream > *,
+  .band .card {
+    /* Relative, not static: the band's artwork is positioned, and a positioned
+       element paints over a static one whatever the source order, so going static
+       here would bury every word of the copy under the photograph. */
+    position: relative !important;
+    inset: auto !important;
+    z-index: 1;
+    width: 100% !important;
+    max-width: 100%;
+    margin-left: 0 !important;
+    transform: none !important;
+  }
+
+  .band > * + * {
+    margin-top: 2.4rem;
+  }
+
+  /* Artwork stays absolute and becomes a cover background, which is the only role
+     it can play once the copy no longer sits at its measured place on it. */
+  .band__art {
+    position: absolute !important;
+    inset: 0 !important;
+    top: 0 !important;
+    z-index: 0;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+  }
+
+  /* Comps justify body copy at every measure; last line stays ragged-left.
+     On phones, justify opens huge word gaps — keep left-aligned. */
+  .hero__body,
+  .projets__body,
+  .projets__subtitle,
+  .news__body,
+  .news__legal,
+  .card__body,
+  .footer__disclaimer,
+  .pubs__body,
+  .map__body,
+  .map__body-text {
+    text-align: start !important;
+    text-align-last: start !important;
+    hyphens: none;
+    word-spacing: normal;
+  }
+
+  /* Blocks whose height was measured against the desktop band, so on a reflowed
+     band they would cut across the wrong part of it. The band paints the colour
+     itself instead. */
+  .band--chiffres::before,
+  .band--gap,
+  .map__art,
+  .stream__wrap {
+    display: none;
+  }
+
+  /* Map art reappears below the copy on mobile. */
+  .band--map::after {
+    content: '';
+    display: block;
+    height: 30rem;
+    margin: 4rem calc(var(--gutter) * -1) calc(var(--band-gap) * -1);
+    background: var(--orange) url('/img/map-no-icon.png') no-repeat right center / cover;
+  }
+
+  .band--chiffres {
+    background: var(--grey-band);
+  }
+
+  .band--map {
+    background: var(--orange);
+  }
+
+  /* ---- hero ---- */
+
+  .band--hero {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 9rem;
+    padding-bottom: 9rem;
+  }
+
+  .hero-carousel {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .hero-carousel__dots {
+    left: var(--gutter);
+  }
+
+  .hero__copy {
+    width: 100%;
+    margin: 0;
+  }
+
+  /* The badge is an orange plate with its line of type placed on it by coordinate.
+     Reflowed, the plate has to take its size from the type instead, so the type
+     comes back into flow and the plate becomes padding around it. */
+  .band .hero__badge {
+    display: inline-block;
+    width: auto !important;
+    height: auto;
+    padding: 1rem 1.8rem;
+    white-space: normal;
+    max-width: 100%;
+  }
+
+  .band .hero__badge span:not(.cms-pencil) {
+    position: static;
+    font-size: 2.1rem;
+    line-height: 1.35;
+    white-space: normal;
+  }
+
+  .hero__intro {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero__title {
+    line-height: 1.2;
+    text-align: start !important;
+    text-align-last: start !important;
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  /* Desktop spans are full-width + justify (comp line flush). On phones that
+     opens huge gaps between words — force left on the spans themselves. */
+  .hero__title span {
+    width: 100%;
+    max-width: 100%;
+    text-align: start !important;
+    text-align-last: start !important;
+    text-justify: auto;
+    white-space: normal;
+  }
+
+  .hero__badge {
+    text-align: start !important;
+    text-align-last: start !important;
+  }
+
+  .hero__body {
+    font-size: 1.8rem;
+    line-height: 1.45;
+    text-align: start !important;
+    text-align-last: start !important;
+  }
+
+  .hero__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero__action,
+  .hero__action .home-btn-edit {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Three side-by-side buttons do not fit a phone, and a button that fills the
+     width reads as a banner, so they wrap and size to their labels. */
+  /* Outlined buttons hide their own chevron at rest, because at the design width
+     the plate underneath already prints one and two would overlap. The plates are
+     gone from the reflowed bands, so the live chevron has to come back — and it
+     has to flow after the label rather than sit at its measured coordinate. */
+  .band .btn {
+    --btn-chev: 1;
+  }
+
+  .band .btn .chev2 {
+    position: static;
+    inset: auto;
+    flex: none;
+  }
+
+  .band .hero__btn {
+    width: 100% !important;
+    min-height: 5.2rem;
+    height: auto;
+    max-width: 100%;
+    padding: 1.2rem 2rem;
+    font-size: 1.6rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  /* ---- chiffres ---- */
+
+  .chiffres__period {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    max-width: none;
+    margin: 0.8rem 0 0;
+    transform: none;
+    white-space: normal;
+    text-align: center;
+    text-align-last: center;
+  }
+
+  .chiffres__title,
+  .projets__title,
+  .projets__subtitle,
+  .map__title,
+  .map__subtitle,
+  .stories__title,
+  .stories__eyebrow,
+  .pubs__title,
+  .news__title,
+  .stream__heading,
+  .page--home .band--publications .pubs__title,
+  .page--home .stream__heading {
+    line-height: 1.15;
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: break-word;
+    word-break: normal;
+    font-size: clamp(2.8rem, 6.5vw, 4.4rem) !important;
+  }
+
+  .page--home .band--publications .pubs__title span,
+  .stream__heading span,
+  .stories__title span {
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: start !important;
+    text-align-last: start !important;
+  }
+
+  .chiffres__kpis {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4rem 2.4rem;
+    height: auto !important;
+  }
+
+  .kpi {
+    text-align: center;
+  }
+
+  .kpi__value {
+    font-size: clamp(3.6rem, 10vw, 5.2rem);
+  }
+
+  .kpi__label {
+    font-size: 1.6rem;
+  }
+
+  /* ---- six projets ---- */
+
+  .logos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 2.4rem;
+    height: auto !important;
+  }
+
+  .logos__cell {
+    display: block;
+    aspect-ratio: 3 / 2;
+    height: auto !important;
+  }
+
+  .logos__grey,
+  .logos__colour {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .logos > li {
+    position: relative !important;
+  }
+
+  /* ---- map ---- */
+
+  .map__body {
+    font-size: 1.7rem;
+    line-height: 1.5;
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: start !important;
+    text-align-last: start !important;
+  }
+
+  .map__body-text,
+  .map__body-text > span {
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: start !important;
+  }
+
+  .projets__body,
+  .pubs__body,
+  .pubs__title,
+  .stories__title,
+  .stories__eyebrow {
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .page--home .projets__body,
+  .projets__body {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    font-size: 1.65rem !important;
+    line-height: 1.5 !important;
+    text-align: start !important;
+    text-align-last: start !important;
+  }
+
+  .pubs__title span {
+    white-space: normal !important;
+  }
+
+  /* Scoped through .band so these are not outranked by the positioning reset
+     above, which would otherwise stretch each one to the full measure. */
+  .band .map__btn,
+  .band .stories__btn,
+  .band .pubs__btn,
+  .band .stream__cta {
+    width: auto !important;
+    min-width: 0 !important;
+    min-height: 5.2rem;
+    height: auto;
+    /* A call to action that fills a tablet's measure stops reading as a button and
+       starts reading as a banner, so it is capped and sized to its label. */
+    max-width: min(100%, 40rem) !important;
+    padding: 1.2rem 2rem;
+    font-size: 1.6rem;
+    white-space: normal;
+  }
+
+  /* ---- streams ---- */
+
+  .band--streams {
+    padding: 0;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .band--projets {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .stream {
+    padding: var(--band-gap) var(--gutter);
+    background: var(--grey-card);
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  .stream + .stream {
+    margin-top: 0 !important;
+  }
+
+  .stream__heading {
+    height: auto !important;
+    padding: 0;
+    line-height: 1.2;
+  }
+
+  /* The card is laid out in flow at the design width too, so there is nothing here to
+     unpick — only its height to release, its copy to set at a legible size, and the
+     clamps to lift, since a card that grows with its content has no need of them. */
+  .page--home .band--streams .card,
+  .band .card,
+  .card {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 2.4rem 2.8rem;
+  }
+
+  .card + .card {
+    margin-top: 3rem;
+  }
+
+  /* Out through this layout's wider inset, so it still meets the card's edges. */
+  .card__thumb {
+    max-width: none;
+    width: calc(100% + 5rem);
+    height: auto !important;
+    margin: -2.08rem -2.5rem 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .card__title {
+    -webkit-line-clamp: unset;
+    font-size: 1.7rem;
+    line-height: 1.25;
+  }
+
+  .card__body {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    flex: none;
+    height: calc(2 * 1.45em);
+  }
+
+  .card__body,
+  .card__meta,
+  .card__fact {
+    font-size: 1.55rem;
+    line-height: 1.45;
+  }
+
+  /* Three facts and a button do not sit on one row at this measure. */
+  .card__foot,
+  .card--event .card__foot {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1.6rem 2.4rem;
+    overflow: visible;
+  }
+
+  .card__fact,
+  .card__fact-value,
+  .card__fact--pin-pink,
+  .card__fact--pin-teal {
+    white-space: normal !important;
+    overflow: visible;
+    text-overflow: unset;
+    max-width: 100%;
+  }
+
+  .card__fact img {
+    width: 2.4rem;
+  }
+
+  .card__fact--pin-pink img,
+  .card__fact--pin-teal img {
+    width: 2.8rem;
+  }
+
+  .card__logo {
+    height: 3.4rem;
+    width: auto;
+    object-position: left center;
+  }
+
+  /* ---- stories ---- */
+
+  /* Same pink plate + collage as desktop; reflow into a compact column instead of
+     swapping in different cut-outs via ::after. */
+  .band--stories {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 5.6rem var(--gutter) 0;
+    background: var(--pink-band);
+    overflow: hidden;
+  }
+
+  .band--stories .band__art {
+    display: none !important;
+  }
+
+  .band--stories::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* Real desktop collage — keep the asset, drop the 98rem desktop height. */
+  .band--stories .stories__collage {
+    display: block !important;
+    position: relative !important;
+    inset: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 1;
+    order: 2;
+    width: calc(100% + (var(--gutter) * 2)) !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 2.4rem calc(var(--gutter) * -1) 0 !important;
+    object-fit: contain;
+    object-position: left bottom;
+    pointer-events: none;
+  }
+
+  .band--stories .stories__eyebrow,
+  .band--stories .stories__title,
+  .band--stories .home-btn-edit--stories {
+    order: 1;
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .stories__eyebrow {
+    font-size: 1.6rem;
+    color: var(--orange);
+  }
+
+  .band--stories .stories__btn {
+    display: inline-flex !important;
+    align-self: flex-start;
+    margin-top: 2.4rem;
+  }
+
+  /* ---- publications ---- */
+
+  /* Same teal plate + books stack as desktop, scaled into the column. */
+  .band--publications {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 5.6rem var(--gutter) 0;
+    background: var(--teal);
+    overflow: hidden;
+  }
+
+  .band--publications::before,
+  .band--publications::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .band--publications .band__art {
+    display: none !important;
+  }
+
+  .band--publications .pubs__books {
+    display: block !important;
+    position: relative !important;
+    inset: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 1;
+    order: 2;
+    width: calc(100% + (var(--gutter) * 2)) !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 2.4rem calc(var(--gutter) * -1) 0 !important;
+    object-fit: contain;
+    object-position: right bottom;
+    pointer-events: none;
+  }
+
+  .band--publications .pubs__title,
+  .band--publications .pubs__body,
+  .band--publications .home-btn-edit--pubs {
+    order: 1;
+  }
+
+  .page--home .band--publications .pubs__body,
+  .pubs__body {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    font-size: 1.65rem !important;
+    line-height: 1.5 !important;
+    text-align: start !important;
+    text-align-last: start !important;
+  }
+
+  .page--home .band--publications .pubs__title span {
+    white-space: normal !important;
+  }
+
+  /* ---- newsletter ---- */
+
+  /* Nested inside .news__copy, so the band>* position reset never reaches these. */
+  .news__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .news__title,
+  .news__body,
+  .news__form,
+  .news__legal {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .news__title {
+    white-space: normal !important;
+  }
+
+  .news__body,
+  .news__legal {
+    font-size: 1.65rem;
+    line-height: 1.45;
+    text-align: start !important;
+    text-align-last: start !important;
+  }
+
+  .news__form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    height: auto !important;
+  }
+
+  .news__form input {
+    flex: 1 1 18rem;
+    min-height: 5.2rem;
+    height: auto !important;
+    padding: 0 1.6rem;
+    font-size: 1.6rem;
+  }
+
+  .news__form > button {
+    min-height: 5.2rem;
+    height: auto !important;
+    padding: 1.2rem 2.2rem;
+    font-size: 1.6rem;
+  }
+
+  .news__collage-wrap {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1850 / 1400;
+    margin-top: 4rem;
+    background-size: contain;
+  }
+
+  /* --------------------------------------------------------------- footer ---- */
+
+  .footer.band {
+    position: relative;
+    height: auto;
+    overflow-x: clip;
+    padding:
+      var(--band-gap)
+      max(var(--gutter), env(safe-area-inset-right, 0px))
+      max(calc(var(--band-gap) + 1.6rem), env(safe-area-inset-bottom, 0px))
+      max(var(--gutter), env(safe-area-inset-left, 0px));
+    background-color: var(--eu-blue-deep);
+    background-image: linear-gradient(
+      180deg,
+      var(--eu-blue-edge) 0%,
+      var(--eu-blue-deep) 52%,
+      var(--eu-blue-deep) 100%
+    );
+  }
+
+  /* The lockup and the funders' flags are real images now rather than parts of a plate, so
+     they stay — they only need releasing from the reset below that stretches a band's children
+     to the full measure, which on an image means blowing it up to the window's width. Scoped
+     through .footer to outrank it: both carry !important, so specificity decides. */
+  .footer .footer__home {
+    width: 16rem !important;
+  }
+
+  .footer .band__inner {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    max-width: 100%;
+    height: auto !important;
+    overflow: visible;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'home funders'
+      'nav nav'
+      'logos logos'
+      'disclaimer disclaimer';
+    gap: 2.8rem 1.6rem;
+    align-items: start;
+  }
+
+  .footer .band__inner > * + * {
+    margin-top: 0 !important;
+  }
+
+  .footer__home {
+    grid-area: home;
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 14rem !important;
+    max-width: 42vw !important;
+  }
+
+  .footer__funders,
+  .footer .funder-flags,
+  .footer__col,
+  .footer__social,
+  .footer__locales {
+    position: static !important;
+    inset: auto !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+  }
+
+  .footer .footer__funders,
+  .footer .funder-flags {
+    grid-area: funders;
+    width: auto !important;
+    max-width: min(30rem, 58vw) !important;
+    margin: 0 !important;
+    justify-self: end;
+    align-self: start;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .footer .funder-flags__item--eu {
+    order: 1;
+  }
+
+  .footer .funder-flags__item--tn {
+    order: 2;
+  }
+
+  .footer .funder-flags__item {
+    width: min(10.5rem, 40vw);
+  }
+
+  .footer .funder-flags__flag-wrap {
+    width: min(9.2rem, 36vw);
+    height: 4.6rem;
+  }
+
+  .footer__nav {
+    grid-area: nav;
+  }
+
+  .footer .logos {
+    grid-area: logos;
+    padding-bottom: 1.2rem;
+  }
+
+  .footer__disclaimer {
+    grid-area: disclaimer;
+  }
+
+  .band__inner {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .band__inner > * {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  .footer .band__inner > .footer__home,
+  .footer .band__inner > .footer__funders,
+  .footer .band__inner > .funder-flags {
+    width: auto !important;
+  }
+
+  .band__inner > * + * {
+    margin-top: 3.4rem;
+  }
+
+  /* One column per link group on a phone, two once there is room, rather than the
+     four the comp sets across the full width. */
+  .footer__nav {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3.2rem;
+    width: 100%;
+  }
+
+  .footer__col {
+    position: static;
+    display: block;
+    inset: auto;
+    width: auto;
+    float: none;
+  }
+
+  .footer__col h2 {
+    font-size: 1.7rem;
+  }
+
+  .footer__col a {
+    font-size: 1.55rem;
+    line-height: 1.55;
+  }
+
+  .footer__locales a,
+  .footer__locales button {
+    font-size: 1.55rem;
+    line-height: 1.4;
+  }
+
+  .footer__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .footer__social,
+  .footer__locales {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    height: auto !important;
+    margin-top: 0 !important;
+  }
+
+  .footer__social li,
+  .footer__locales li {
+    position: static !important;
+    inset: auto !important;
+  }
+
+  /* The strip's narrow treatment is written for the "Six projets" band, where the logos are
+     the content and half the window each is right. In the footer they are a sign-off under the
+     link columns, and at that size they tower over everything above them, so they go three
+     across in a shallow cell. */
+  .footer .logos {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.4rem 2rem;
+  }
+
+  .footer .logos__cell {
+    aspect-ratio: 2 / 1;
+  }
+
+  .footer__disclaimer {
+    font-size: 1.4rem;
+    line-height: 1.5;
+  }
+
+  /* No blanket rule for the footer's images. There used to be one capping them to the measure
+     at their own ratio, from when the only images here were the plate; it now outranks the
+     logo strip's own sizing by one element, which let every mark keep its natural height
+     inside a cell half as tall and spill over the row beneath. Both images left in the footer
+     carry their own width and ratio. */
+}
+
+@media (min-width: 600px) and (max-width: 1099px) {
+  .footer__nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3.2rem 4rem;
+    width: 100%;
+  }
+
+  .footer__col {
+    position: static;
+    float: none;
+    width: auto !important;
+  }
+}
+
+/* The project logos rest in grey and come up in their real colours when pointed
+   at, which is the comp's own instruction. A touch screen has no pointer to rest,
+   so grey would be the only state it ever showed; there they start in colour. */
+@media (hover: none) {
+  .logos__grey {
+    opacity: 0;
+  }
+
+  .logos__colour {
+    opacity: 1;
+  }
+}
+
+/* Phones: two columns are too tight for the KPI figures and the logo strip. */
+@media (max-width: 599px) {
+  html {
+    --band-gap: 3.2rem;
+    --gutter: clamp(14px, 4.5vw, 20px);
+  }
+
+  .band {
+    padding: var(--band-gap) var(--gutter);
+  }
+
+  .band--hero {
+    padding-top: 5.6rem;
+    padding-bottom: 5.6rem;
+  }
+
+  .band .hero__badge {
+    padding: 0.8rem 1.4rem;
+  }
+
+  .band .hero__badge span:not(.cms-pencil) {
+    font-size: 1.4rem;
+    line-height: 1.3;
+  }
+
+  .hero__title {
+    font-size: clamp(2.4rem, 7.2vw, 3.1rem);
+    line-height: 1.15;
+  }
+
+  .band .hero__btn {
+    min-height: 4.8rem;
+    padding: 1rem 1.6rem;
+    font-size: 1.5rem;
+  }
+
+  /* Nowrap buttons must be allowed to wrap/shrink on phones. */
+  .btn {
+    white-space: normal;
+    max-width: 100%;
+  }
+
+  .chiffres__title,
+  .projets__title,
+  .projets__subtitle,
+  .map__title,
+  .map__subtitle,
+  .stories__title,
+  .pubs__title,
+  .news__title,
+  .stream__heading,
+  .page--home .band--publications .pubs__title,
+  .page--home .stream__heading {
+    font-size: clamp(2.4rem, 7.2vw, 3.2rem) !important;
+  }
+
+  .kpi__value {
+    font-size: clamp(3.2rem, 12vw, 4.4rem);
+  }
+
+  .kpi__label {
+    font-size: 1.45rem;
+  }
+
+  .band--map::after {
+    height: 18rem;
+  }
+
+  .header__logo,
+  .header__logo img {
+    height: 4.8rem;
+  }
+
+  .header__burger {
+    width: 4.8rem;
+    height: 4.8rem;
+  }
+
+  .header__locales {
+    font-size: 1.4rem;
+  }
+
+  .nav__link {
+    min-height: 4.4rem;
+    padding: 1.2rem var(--gutter);
+    font-size: 1.65rem;
+  }
+
+  .nav__rows a {
+    min-height: 4rem;
+    padding: 1rem var(--gutter);
+    font-size: 1.55rem;
+  }
+
+  /* The figures need the full measure — "+ 300" beside "GOUVERNORATS" does not
+     survive half of a phone's width. The logos do, and one per row would add most
+     of a screen's height to the page for no gain. */
+  .chiffres__kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .header__inst {
+    flex-wrap: wrap;
+    align-content: flex-start;
+    row-gap: 0;
+    padding:
+      max(1.6rem, env(safe-area-inset-top, 0px))
+      max(var(--gutter), env(safe-area-inset-right, 0px))
+      1.6rem
+      max(var(--gutter), env(safe-area-inset-left, 0px));
+  }
+
+  .header__burger {
+    margin-left: 0;
+  }
+
+  .header__flags,
+  .header__inst .funder-flags {
+    order: 3;
+    flex: 0 0 100%;
+    width: auto;
+    height: auto;
+    margin: 0.8rem 0 0;
+    margin-left: 0;
+    justify-content: flex-start;
+    gap: 1.2rem;
+  }
+
+  .header__inst .funder-flags__item {
+    width: min(8.8rem, 40vw);
+  }
+
+  .header__inst .funder-flags__caption {
+    font-size: 0.88rem;
+  }
+
+  p {
+    text-align: start;
+    text-align-last: start;
+    hyphens: none;
+  }
+
+  .nav__lang-menu {
+    position: static;
+    min-width: 0;
+    width: 100%;
+    margin-top: 1rem;
+    border: 0.1rem solid rgb(255 255 255 / 35%);
+    box-shadow: none;
+  }
+
+  .nav__lang-menu button {
+    min-height: 4.4rem;
+    padding: 1rem 1.4rem;
+    font-size: 1.5rem;
+  }
+
+  .footer__col h2 {
+    font-size: 1.55rem;
+  }
+
+  .footer__col a,
+  .footer__locales a,
+  .footer__locales button {
+    font-size: 1.45rem;
+  }
+
+  .footer__disclaimer {
+    font-size: 1.3rem;
+  }
+}

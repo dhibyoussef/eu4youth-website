@@ -1,0 +1,38 @@
+{
+  "name": "eu4youth-website",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build:preprod": "tsc && vite build && node tools/inline-preprod.mjs",
+    "generate:sitemap": "python tools/generate_sitemap.py",
+    "preview": "vite preview",
+    "audit": "node tools/site-audit.mjs http://127.0.0.1:3010",
+    "audit:nav": "node tools/nav-audit.mjs http://127.0.0.1:3010",
+    "audit:links": "node tools/link-audit.mjs http://127.0.0.1:3010",
+    "audit:seo": "node tools/seo-audit.mjs http://127.0.0.1:3010",
+    "audit:search": "node tools/search-audit.mjs http://127.0.0.1:3010",
+    "audit:browsers": "node tools/cross-browser-audit.mjs http://127.0.0.1:3010",
+    "audit:forms": "node tools/form-audit.mjs http://127.0.0.1:3010",
+    "audit:deployment": "node tools/deployment-audit.mjs"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "playwright": "^1.62.1",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.0",
+    "xlsx": "^0.18.5"
+  },
+  "dependencies": {
+    "axios": "^1.19.0",
+    "i18next": "^26.3.6",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-i18next": "^17.0.11",
+    "react-router-dom": "^7.18.2"
+  }
+}

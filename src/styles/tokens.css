@@ -1,0 +1,687 @@
+/* Design tokens measured directly out of the UI Web Design PDFs.
+   Colours, type sizes and coordinates come from tools/extract_design.py
+   geometry dumps — not from eyeballing the renders.
+
+   SCALING MODEL
+   The comps are drawn on a 1920px canvas. Root font-size is pinned to
+   100vw / 192, so 1rem === 10 design px at any viewport. The whole page
+   scales as one piece and proportions stay exact. Below 1100px,
+   responsive.css reflows bands instead of shrinking the composition. */
+
+html {
+  /* 75% presentation: scales the 1920 rem canvas uniformly (not CSS zoom). */
+  --zoom: 0.75;
+  --canvas-offset: max(0px, (100vw - 192rem) / 2);
+  font-size: calc(100vw / 192 * var(--zoom));
+  /* clip (not hidden): hidden forces overflow-y:auto and breaks sticky nav. */
+  overflow-x: clip;
+}
+
+/* Ultrawide: stop growing so line lengths stay sane. */
+@media (min-width: 2400px) {
+  html {
+    font-size: calc(12.5px * var(--zoom));
+  }
+}
+
+:root {
+  /* ---- Institutional ---- */
+  --eu-blue: #074ea2;
+  --eu-blue-deep: #013d86; /* footer gradient core */
+  --eu-blue-edge: #024da1; /* footer gradient edge */
+
+  /* ---- Accent / thematic (COLOR GUIDLINE 2026) ---- */
+  --pink: #e04070;
+  --pink-band: #d43170;
+  --teal: #1a9a94;
+  --green: #50b84c;
+  --orange: #f0a848;
+  --orange-text: #985800;
+  --pink-text: #a51f4c;
+  --teal-a11y: #0b7470;
+
+  /* ---- Neutrals ---- */
+  --white: #ffffff;
+  --ink: #000000;
+  --navy: #081b2e;
+  --grey-band: #f7f7f7;
+  --grey-card: #f9f9f9;
+  --grey-field: #f2f2f2;
+  --grey-rule: #cccccc;
+  --map-zero: #d4d4d4;
+  --map-t1: #82a7d1;
+  --map-t2: #437ebf;
+  --map-t3: #034ea2;
+  --map-t4: #0d3159;
+
+  /* ---- Project identity (COLOR GUIDLINE.pdf) ---- */
+  /* ---- Project brand colours (soft = lighter tone of the main, never a
+     contrasting accent such as institutional orange on a pink project) ---- */
+  --p-fe3ila: #040884;
+  --p-fe3ila-soft: #9aa0d6;
+  --p-fe3ila-text: #040884;
+  /* White ink on navy Fe3il.a bands. */
+  --p-fe3ila-on: var(--white);
+  --p-jeuness: #e04070;
+  --p-jeuness-soft: #ff91b1;
+  --p-jeuness-text: #a51f4c;
+  --p-swafy: #6c5ca4;
+  --p-swafy-soft: #9e8ede;
+  --p-swafy-text: #4a3d78;
+  --p-maghroumin: #50b84c;
+  --p-maghroumin-soft: #b7d3b6;
+  --p-maghroumin-text: #2f7a2c;
+  --p-go4youth: #20b4e4;
+  --p-go4youth-soft: #96d3e8;
+  --p-go4youth-text: #087a9c;
+  --p-irada: #f0a848;
+  --p-irada-soft: #f1c995;
+  --p-irada-text: #985800;
+  --p-irada4youth: var(--p-irada);
+  --p-irada4youth-soft: var(--p-irada-soft);
+  --p-irada4youth-text: var(--p-irada-text);
+
+  /* ---- Type: Poppins is the site face; Changa covers Arabic glyphs ---- */
+  --font-display: 'Poppins', 'Changa', sans-serif;
+  --font-ui: 'Poppins', 'Changa', sans-serif;
+  --font-body: 'Poppins', 'Changa', sans-serif;
+  --font-arabic: 'Changa', 'Poppins', sans-serif;
+
+  /* ---- Canvas ---- */
+  --canvas: 192rem;
+  /* Narrow viewports: readable inset (responsive.css also sets this on html). */
+  --gutter: clamp(16px, 5.5vw, 32px);
+  --hero-title: clamp(5.2rem, 6.4vw, 13.6rem);
+}
+
+@media (min-width: 1100px) {
+  :root {
+    --gutter: 16rem;
+  }
+
+  .page {
+    --pad-x: 16rem !important;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 3.8rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--white);
+  /* Same as html: clip keeps horizontal bleed cut without killing sticky. */
+  overflow-x: clip;
+  width: 100%;
+}
+
+/* Arabic: Changa is already loaded for bilingual marks; use it for body copy so
+   glyphs stay clear (Poppins has almost no Arabic coverage). */
+html[dir='rtl'] body,
+html[dir='rtl'] button,
+html[dir='rtl'] input,
+html[dir='rtl'] textarea,
+html[dir='rtl'] select {
+  font-family: var(--font-arabic);
+}
+
+html[dir='rtl'] h1,
+html[dir='rtl'] h2,
+html[dir='rtl'] h3,
+html[dir='rtl'] h4,
+html[dir='rtl'] .btn,
+html[dir='rtl'] .nav,
+html[dir='rtl'] .hero__badge,
+html[dir='rtl'] .hero__title {
+  font-family: var(--font-arabic);
+}
+
+/* The browser's default is an opaque blue that has nothing to do with this palette, and over
+   the pink bands it lands as a violet slab across the heading that reads as a broken element
+   rather than as selected words. */
+::selection {
+  color: var(--white);
+  background: var(--eu-blue);
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+  font-weight: inherit;
+}
+
+/* Most CMS-driven copy in the EU4Youth design uses justified paragraphs. */
+p,
+[class$='__body'],
+[class$='__body-text'],
+[class$='__legal'] {
+  text-align: justify;
+  text-align-last: left;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.14;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* Ordered lists are used for reading order, never for the browser's numbering:
+   every one of them draws its own 01/02/03 in the markup, so the default marker
+   and its indent are duplication. */
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 0.3rem solid var(--orange);
+  outline-offset: 0.2rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------
+   Section band: full-bleed strip whose height matches the comp.
+   --------------------------------------------------------------- */
+.band {
+  position: relative;
+  width: 100%;
+}
+
+.band__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.band__inner {
+  position: relative;
+  height: 100%;
+}
+
+/* Body copy is justified across comps; last line stays ragged-left.
+   Never hyphenate mid-word — wraps only at spaces. */
+html {
+  -webkit-hyphens: none;
+  hyphens: none;
+}
+
+.page p:not(.sr-only):not([class*='btn']):not([class*='badge']),
+.page li:not([class*='nav']):not([class*='locale']),
+.page .hero__body,
+.page .stub__intro,
+.page .stub__note,
+.page [class*='__excerpt'],
+.page [class*='__desc'],
+.page [class*='__lede'],
+.page [class*='__copy'] p,
+.page [class*='__body']:not([class*='btn']),
+.page [class*='__body-text'],
+.page [class*='__legal'],
+.page [class*='__chapo'] {
+  text-align: justify;
+  text-align-last: left;
+  -webkit-hyphens: none !important;
+  hyphens: none !important;
+  word-break: normal;
+  overflow-wrap: normal;
+  line-height: 1.55;
+}
+
+/* ---------------------------------------------------------------
+   Buttons — every state pair is taken from BUTTON GUIDLINE.pdf, which lists a
+   resting and a hover treatment for each background colour the button can sit
+   on. Sizes and positions are set per usage.
+
+   Each variant sets three things:
+     --btn-fill       resting fill
+     --btn-hover      hover / focus fill, per the guideline pairing
+     --btn-hover-ink  hover label colour, where it depends on the band
+
+   Buttons over artwork bands sit on top of a plate that is printed into the
+   comp and cannot be lifted out of it: the PDFs draw each band's background,
+   the map and the button plates inside shared path objects, so any redaction
+   aggressive enough to drop a button outline also drops the artwork behind it.
+   Filled variants therefore paint their own opaque fill, which hides the plate
+   completely; outlined variants stay transparent so the printed stroke shows
+   through, since their interior is the photograph. A 2px border of the same
+   colour as the fill covers antialiased edges of the plate without growing
+   the control past the printed rectangle — an outset ring would show as a
+   sliver of the fill against the band, which is what the comps never do.
+   --------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  box-sizing: border-box;
+  min-height: 5.6rem;
+  height: auto;
+  max-width: 100%;
+  overflow: visible;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  padding: 1.5rem 2.8rem;
+  /* Read with fallbacks rather than declared here, so a page can set any of
+     them without depending on stylesheet order. */
+  background: var(--btn-fill, transparent);
+  /* Outlined variants set --btn-line and leave --btn-fill unset, so they keep a
+     transparent interior with a real stroke of their own. The comps draw that
+     stroke at 2 design px, which is 0.2rem here. */
+  border: 0.2rem solid var(--btn-line, var(--btn-fill, transparent));
+  transition: background-color 160ms ease, color 160ms ease,
+    border-color 160ms ease;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  background: var(--btn-hover, transparent);
+  border-color: var(--btn-hover, var(--btn-line, transparent));
+  color: var(--btn-hover-ink, var(--eu-blue));
+}
+
+/* Outlined variants leave the comp's printed chevron visible at rest and swap
+   in the live one once a fill covers it. Filled variants hide the plate from
+   the first frame, so theirs is always live. */
+.btn .chev2 {
+  opacity: var(--btn-chev, 1);
+  transition: opacity 160ms ease;
+}
+
+.btn:hover .chev2,
+.btn:focus-visible .chev2 {
+  opacity: 1;
+}
+
+/* Hero over photography, as both Accueil.pdf and a propos.pdf draw it: an orange
+   plate with a white label, and secondaries outlined in orange whose interior
+   stays the photograph. The guideline's white-plate pair below is what the rest
+   of the site uses on artwork; these two heroes set their own, and the white
+   outlines lost their edges against the pale sky and denim in the photograph. */
+.btn--photo-fill {
+  --btn-fill: var(--orange);
+  --btn-hover: var(--white);
+  --btn-hover-ink: var(--orange);
+  color: var(--white);
+}
+
+.btn--photo-line {
+  --btn-chev: 0;
+  --btn-fill: transparent;
+  --btn-line: var(--orange);
+  --btn-hover: var(--orange);
+  --btn-hover-ink: var(--white);
+  color: var(--orange);
+}
+
+/* Photography primary (BUTTON GUIDLINE): white plate / orange label → orange / white. */
+.btn--fill-orange {
+  --btn-fill: var(--white);
+  --btn-hover: var(--orange);
+  --btn-hover-ink: var(--white);
+  color: var(--orange);
+}
+
+/* White-band / light secondary: blue outline → blue fill / white label. */
+.btn--line-orange {
+  --btn-chev: 0;
+  --btn-line: var(--eu-blue);
+  --btn-hover: var(--eu-blue);
+  --btn-hover-ink: var(--white);
+  color: var(--eu-blue);
+}
+
+/* Coloured-band secondary: outline → white fill with band-coloured label. */
+.btn--line-pink {
+  --btn-chev: 0;
+  --btn-line: var(--pink);
+  --btn-hover: var(--white);
+  --btn-hover-ink: var(--pink);
+  color: var(--pink);
+}
+
+/* White plate on navy / blue bands → orange plate, white label.
+   Orange-band pages override --btn-hover to --eu-blue. */
+.btn--fill-white {
+  --btn-fill: var(--white);
+  --btn-hover: var(--orange);
+  --btn-hover-ink: var(--white);
+  color: var(--eu-blue);
+}
+
+/* Outlined white → fills white and takes its label from the band behind it,
+   set by the page through --btn-hover-ink. */
+.btn--line-white {
+  --btn-chev: 0;
+  --btn-fill: transparent;
+  --btn-line: var(--white);
+  --btn-hover: var(--white);
+  color: var(--white);
+}
+
+/* Hero over photography: transparent / white outline → orange plate, white label. */
+.btn--line-white-orange {
+  --btn-chev: 0;
+  --btn-fill: transparent;
+  --btn-line: var(--white);
+  --btn-hover: var(--orange);
+  --btn-hover-ink: var(--white);
+  color: var(--white);
+}
+
+/* Horizontal chip / alphabet rails: trailing padding + soft edge fade so
+   clipped descendants are intentional scroll affordances, not layout bugs. */
+.scroll-rail {
+  -webkit-overflow-scrolling: touch;
+  padding-inline-end: 3.2rem;
+  mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 2.8rem), transparent);
+}
+
+/* Blue on white → orange plate, white label. */
+.btn--fill-blue {
+  --btn-fill: var(--eu-blue);
+  --btn-hover: var(--orange);
+  --btn-hover-ink: var(--white);
+  color: var(--white);
+}
+
+/* EU4Youth lockup as banner watermark (not the EU4Y acronym). */
+.brand-filigrane,
+.pj-hero .brand-filigrane {
+  display: none !important;
+}
+
+.partners-hero h1,
+.mechanisms-hero h1,
+.ps-hero h1,
+.map-hero h1,
+.obj-hero h1,
+.gov-hero h1,
+.fin-hero h1,
+.news-hero h1,
+.pub-hero h1,
+.gloss-hero h1,
+.media-hero h1,
+.contact-hero h1,
+.legal-hero h1,
+.plan-hero h1,
+.eu-tn-hero h1,
+.search-page__hero h1,
+.stories-hero h1,
+.op-hero h1,
+.agenda-hero h1 {
+  line-height: 1.12 !important;
+  max-width: 120rem;
+}
+
+.partners-hero,
+.mechanisms-hero,
+.map-hero,
+.obj-hero,
+.gov-hero,
+.fin-hero,
+.ps-hero,
+.ap-hero {
+  min-height: 0 !important;
+  padding-top: 5.6rem !important;
+  padding-bottom: 5.2rem !important;
+}
+
+/* Mécanismes listing title needs more air than the default compact strip. */
+.mechanisms-hero {
+  padding-top: 9.5rem !important;
+  padding-bottom: 9.5rem !important;
+}
+
+.ap-hero {
+  /* Clear the open Programme rail (~1 nav slot ≈ 27rem + nav pad). */
+  padding-left: max(var(--gutter), 30rem) !important;
+}
+
+.page--apropos .ap-hero--slider {
+  padding-left: 0 !important;
+}
+
+.page--apropos .ap-hero--slider .ap-hero__copy {
+  padding-left: 0;
+}
+
+.ap-hero__title {
+  line-height: 1.12 !important;
+}
+
+.ap-hero__badge {
+  width: auto !important;
+  max-width: 100%;
+  height: auto !important;
+  white-space: normal !important;
+  padding: 1rem 1.6rem;
+}
+
+.ps-hero h1,
+.partners-hero h1,
+.mechanisms-hero h1 {
+  text-align: left !important;
+  letter-spacing: -0.08rem !important;
+}
+
+.partners-title-row {
+  justify-content: flex-start !important;
+  margin-inline: 0 !important;
+}
+
+.partners-hero p,
+.mechanisms-hero p {
+  text-align: justify !important;
+  text-align-last: left !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+.ps-hero__copy > p,
+.gov-hero__copy > p:last-child,
+.map-hero__copy > p:not(.map-hero__badge) {
+  font-size: 3.1rem !important;
+  line-height: 1.5 !important;
+  text-align: justify !important;
+  text-align-last: left !important;
+  max-width: 98rem;
+  margin-left: 0;
+}
+.gov-hero__eyebrow,
+.ps-hero__eyebrow,
+.fin-hero__eyebrow,
+.map-hero__badge,
+.partners-hero .partners-eyebrow,
+.mechanisms-hero .mechanisms-eyebrow {
+  display: inline-flex !important;
+  align-items: center;
+  min-height: 0 !important;
+  padding: 0.9rem 1.6rem 1rem !important;
+  line-height: 1.15;
+}
+
+.news-hero::after,
+.op-hero::after,
+.agenda-hero::after,
+.gloss-hero::after,
+.gloss-hero::before,
+.media-hero::after,
+.media-hero::before,
+.stories-hero::after,
+.stories-hero::before,
+.contact-hero::after,
+.contact-hero::before,
+.legal-hero::after,
+.legal-hero::before,
+.plan-hero::after,
+.plan-hero::before,
+.search-page__hero::after,
+.search-page__hero::before,
+.mechanisms-hero::after,
+.partners-hero::after,
+.mechanisms-hero::after,
+.pub-hero::after,
+.pubs-hero::after,
+.map-hero::after,
+.gov-hero::after,
+.gov-hero::before,
+.obj-hero::before,
+.obj-hero::after,
+.fin-hero::before,
+.fin-hero::after,
+.pub-hero::before,
+.ap-vision::before,
+.ap-hero::before,
+.ap-hero::after,
+.sheet__card--pink::before,
+.partners-hero::before,
+.mechanisms-hero::before,
+.news-hero::before,
+.op-hero::before,
+.agenda-hero::before,
+.ps-hero::before,
+.ps-hero::after {
+  content: none !important;
+}
+
+.news-hero__mark,
+.op-hero__mark,
+.agenda-hero__mark,
+.gloss-hero__mark,
+.media-hero__mark,
+.partners-hero__mark,
+.mechanisms-hero__mark,
+.legal-hero__mark,
+.plan-hero__mark {
+  display: none !important;
+}
+
+/* Listing / explorer banners — ~35% lighter than comp plates (brief 2026).
+   Document pages (legal, plan, contact, EU en Tunisie) keep their own hero scale. */
+.news-hero h1,
+.op-hero h1,
+.agenda-hero h1,
+.pub-hero h1,
+.gloss-hero h1,
+.stories-hero h1,
+.media-hero h1,
+.search-page__hero h1,
+.mechanisms-hero h1,
+.partners-hero h1,
+.contact-hero h1,
+.legal-hero h1,
+.plan-hero h1 {
+  line-height: 1.12 !important;
+  letter-spacing: -0.08rem !important;
+}
+
+.news-hero,
+.op-hero,
+.agenda-hero,
+.pub-hero,
+.gloss-hero,
+.stories-hero,
+.media-hero,
+.search-page__hero,
+.mechanisms-hero {
+  min-height: 0 !important;
+  padding-top: 8rem !important;
+  padding-bottom: 7rem !important;
+}
+
+.news-hero p,
+.op-hero p,
+.agenda-hero p,
+.pub-hero p,
+.gloss-hero p,
+.stories-hero p,
+.media-hero p,
+.search-page__hero p,
+.mechanisms-hero p,
+.partners-hero p,
+.legal-hero + * p,
+.contact-hero p,
+.plan-hero p,
+.eu-tn-hero p {
+  font-size: 3.2rem !important;
+  line-height: 1.5 !important;
+  text-align: justify !important;
+  text-align-last: left !important;
+}
+
+.header__home-link {
+  position: absolute;
+  left: 24.5rem;
+  top: 50%;
+  z-index: 4;
+  translate: 0 -50%;
+  padding: 1rem 1.8rem 1.15rem;
+  color: var(--eu-blue);
+  border: 0.2rem solid var(--eu-blue);
+  font: 700 1.5rem/1.15 var(--font-ui);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1099px) {
+  .header__home-link {
+    position: static;
+    translate: none;
+    margin-left: 1rem;
+  }
+
+  .brand-filigrane {
+    height: 12rem;
+    right: 1.2rem;
+    bottom: 1rem;
+  }
+}

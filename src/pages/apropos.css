@@ -1,0 +1,3839 @@
+/* À propos EU4Youth.
+   ============================================================================
+   Laid out as a flow, not as coordinates. The homepage can be placed absolutely
+   because nothing on it changes size; this page has three accordions, two folded
+   paragraph sets and a tabbed partner block, and each of those changes the height of
+   everything below it the moment a reader opens one. So the comp's numbers are used
+   for type, colour, spacing and column widths, and the browser stacks the bands.
+
+   The app's root font-size is 100vw/192, so 1rem is 10 design px and every measurement
+   below is the comp's own number divided by ten. */
+
+/* --zoom brings every rem down, but a band still spans the whole window, so below 1 the
+   content shrinks while the band does not and the comp's proportions come apart: a card
+   measured in rem pulls away from the edge it was flush with, while anything measured in
+   percent stays put. The fix is to treat the comp as a canvas of --canvas (192rem, so it
+   tracks the zoom) centred in the band, and to add whatever is left over to the band's own
+   gutters. Band colours still reach both edges; the content inside keeps the comp's
+   proportions exactly, at whatever size --zoom asks for. */
+.page--apropos {
+  /* Match homepage/header: comp x coordinates are from the viewport left edge,
+     not a centred canvas — see home.css --home-canvas-offset. */
+  --bleed: 0px;
+  --pad-x: 7.7rem; /* comp body column starts at x 77 */
+  --band-y: 9rem;
+  background: var(--white);
+}
+
+/* Wrapped in :where() so it carries no weight of its own. Written plainly it outranked every
+   single-class rule below it — a class plus a type beats a class — so the margins those rules
+   measured off the comp were being dropped on the floor: the gap under the avenir copy, the one
+   under the impact lede, the auto centring on the partners lede. Each looked authored and
+   correct and did nothing, which is the worst way for a reset to fail. */
+:where(.page--apropos p) {
+  margin: 0;
+}
+
+/* The dashed disc, in both the places the comp hangs one. See <Disque>: the drawing is at its
+   full size inside this box, and this box crops it.
+
+   The box is the part of the drawing the comp's page shows, pinned to the window's right edge,
+   so the cut lands where the screen ends and the drawing reads as running off it. The two other
+   ways of placing it both fail, and it is worth saying why: cut at the canvas edge instead and
+   the flat edge appears in mid-band with band colour beyond it, because the canvas is centred
+   and narrower than the window; opened at the comp's x and cropped at the window, and the extra
+   gutter width lets through 92% of a drawing the comp only ever shows 45% of, so the whole oval
+   turns up floating over the map card. The band's colour is what bleeds to the window's edge —
+   this keeps the comp's silhouette and meets that edge.
+
+   Its height is the drawing's exactly, so nothing is cropped vertically: the box hangs above
+   the band's top edge, which is where the comp puts most of it.
+
+   Sized against the window rather than the canvas — --comp is one comp px as a share of the
+   window, where a rem is one tenth of a comp px as a share of the canvas. This is the one place
+   on the page where that difference is visible, and it is why the disc read as too small. The
+   canvas is 82% of the window, so everything drawn in rem is at 82% of the size it has on the
+   comp's page. For content that has neighbours, that is invisible: it shrinks together. This has
+   no neighbours — it touches the window's edge, which is the full 100%, so it was being compared
+   against the page rather than against the band's content, and came up a fifth short. Against
+   the window it takes the same share of the width the comp gives it, which also restores its
+   overlap with the map card's corner. The two scales converge when --zoom reaches 1. */
+.disque {
+  --comp: calc(100vw / 1920);
+  position: absolute;
+  right: 0;
+  /* Sit behind band content so the arc never covers titles or legend copy. */
+  z-index: 0;
+  height: 34.614rem;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.disque svg {
+  display: block;
+  width: 45.316rem;
+  height: 34.614rem;
+}
+
+/* ---------------------------------------------------------------- hero ---- */
+
+.ap-hero {
+  position: relative;
+  min-height: 106.9rem;
+  padding: 9.8rem var(--pad-x) 8rem 27.8rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ap-hero--slider {
+  display: flex;
+  align-items: center;
+  min-height: 118rem !important;
+  padding: 0 !important;
+}
+
+.ap-hero--slider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgb(8 27 46 / 62%) 0%,
+    rgb(8 27 46 / 32%) 46%,
+    rgb(8 27 46 / 6%) 78%
+  );
+}
+
+.ap-hero--slider .hero-carousel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ap-hero--slider .hero-carousel__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 700ms ease;
+}
+
+.ap-hero--slider .hero-carousel__slide.is-active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.ap-hero__slide-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  pointer-events: none;
+}
+
+.ap-hero--slider .hero-carousel__dots {
+  position: absolute;
+  left: max(var(--gutter), 30rem);
+  bottom: 3.2rem;
+  z-index: 2;
+  display: flex;
+  gap: 1rem;
+}
+
+.ap-hero--slider .hero-carousel__dots button {
+  width: 1.2rem;
+  height: 1.2rem;
+  padding: 0;
+  border: 0.2rem solid var(--white);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ap-hero--slider .hero-carousel__dots button.is-on {
+  background: var(--white);
+}
+
+.ap-hero__copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.8rem;
+  box-sizing: border-box;
+  width: min(116rem, calc(100% - 32rem));
+  margin: 10rem 14rem 11rem;
+  margin-left: max(var(--gutter), 32rem);
+}
+
+.ap-hero__intro {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: 114rem;
+}
+
+/* Measured plate: 616 x 51.4 at x 278, with the lettering set in from its left edge
+   rather than centred in it. */
+.ap-hero__badge {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  height: auto;
+  min-height: 5.14rem;
+  margin-bottom: 0.7rem;
+  padding: 1rem 1.6rem;
+  background: var(--orange);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1.3;
+  white-space: normal;
+}
+
+.ap-hero__title {
+  margin: 0 0 4.4rem;
+  width: 100%;
+  max-width: none;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 7.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 0 0.2rem 1.2rem rgb(8 27 46 / 45%);
+}
+
+.ap-hero__title span {
+  display: block;
+  width: 100%;
+  text-align: justify;
+  text-align-last: left;
+}
+
+.ap-hero__body {
+  display: grid;
+  gap: 5.3rem;
+  width: 100%;
+  max-width: 114rem;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 2.8rem;
+  font-weight: 500;
+  line-height: 1.75;
+  text-align: justify;
+  text-align-last: left;
+  text-shadow: 0 0.2rem 1rem rgb(8 27 46 / 40%);
+}
+
+.ap-hero__body p {
+  margin: 0;
+  max-width: none;
+  line-height: 1.75;
+}
+
+.ap-hero__body p + p {
+  line-height: 1.75;
+}
+
+.ap-hero__actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 1.2rem;
+  width: 100%;
+  max-width: 108rem;
+  margin-top: 3.2rem;
+}
+
+.ap-hero__actions .ap-btn-edit {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.ap-hero__actions .btn {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 7.6rem;
+  height: 100%;
+  padding: 1.5rem 2.2rem;
+  font-size: 3.2rem;
+  line-height: 1.25;
+  white-space: normal;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ap-cms-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.2rem;
+  position: relative;
+  z-index: 30;
+  margin: 0 0 2rem;
+  grid-column: 1 / -1;
+}
+
+.ap-hero > .ap-cms-bar,
+.ap-vision > .ap-cms-bar {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  margin: 0 0 2rem;
+}
+
+.page--apropos .ap-cms-bar .cms-chip-only,
+.page--apropos .ap-cms-bar .cms-list-trigger-wrap,
+.page--apropos .ap-cms-chips .cms-chip-only,
+.page--apropos .ap-why__more-row .cms-chip-only {
+  position: static;
+  top: auto;
+  right: auto;
+  left: auto;
+}
+
+.page--apropos .ap-cms-bar .cms-image-chip {
+  position: static;
+}
+
+.sheet .ap-pencil.cms-chip-only {
+  position: static;
+  margin: 1.2rem 0 0;
+}
+
+.ap-cms-hidden-img {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+body.cms-editing .ap-hero .cms-editable.ap-cms-hidden-img {
+  inset: auto;
+  top: 1.6rem;
+  right: 1.6rem;
+  width: 28px;
+  height: 28px;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 20;
+  outline: none;
+}
+body.cms-editing .ap-hero .cms-editable.ap-cms-hidden-img > img {
+  display: none;
+}
+body.cms-editing .ap-hero .cms-editable.ap-cms-hidden-img .cms-image-chip {
+  position: static;
+  top: auto;
+  right: auto;
+  width: 28px;
+  height: 28px;
+}
+
+body.cms-editing .page--apropos .ap-vision {
+  overflow: visible;
+  height: auto;
+  min-height: 0;
+}
+
+.page--apropos .cms-editable .cms-pencil {
+  /* Keep absolute inset pencils on À propos (same as Accueil). */
+  position: absolute;
+  display: grid;
+  margin-inline-start: 0;
+}
+.page--apropos .ap-pencil.cms-chip-only,
+.page--apropos .ap-btn-edit .cms-chip-only,
+.page--apropos .ap-title-row .cms-chip-only,
+.page--apropos .ap-why__more-row .cms-chip-only {
+  position: relative;
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  top: auto;
+  right: auto;
+}
+.page--apropos .ap-pencil.cms-chip-only .cms-pencil,
+.page--apropos .ap-btn-edit .cms-chip-only .cms-pencil,
+.page--apropos .ap-title-row .cms-chip-only .cms-pencil,
+.page--apropos .ap-why__more-row .cms-chip-only .cms-pencil {
+  position: static;
+}
+
+.ap-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.2rem;
+  max-width: 100%;
+}
+
+.ap-hero .ap-title-row,
+.ap-projets__title .ap-title-row {
+  width: max-content;
+}
+
+.ap-impact__title.ap-title-row,
+.ap-partners__title.ap-title-row {
+  display: inline-flex;
+  justify-content: center;
+  width: auto;
+  max-width: 100%;
+}
+
+.ap-map__title.ap-title-row,
+.ap-map__note.ap-title-row {
+  width: 100%;
+}
+
+.ap-map__title.ap-title-row > span:first-child,
+.ap-map__note.ap-title-row > span:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.ap-btn-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.ap-hero > .cms-image-chip {
+  position: absolute;
+  top: 2rem;
+  right: 2.4rem;
+  z-index: 20;
+}
+
+.ap-why__more-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.page--apropos .cms-list-trigger-wrap {
+  position: relative;
+  z-index: 5;
+  margin: 1.2rem 0;
+}
+
+.ap-avenir .cms-image-chip {
+  position: absolute;
+  right: calc(var(--bleed) + 2.3rem);
+  bottom: 4rem;
+  z-index: 5;
+  pointer-events: auto;
+}
+
+/* The shared .btn carries colour and stroke but no size: the homepage gives every
+   button an absolute width and height, so in a flow layout they collapse onto their
+   own labels. Match home hero CTA type (3.2rem) so labels stay readable at --zoom. */
+.page--apropos .btn {
+  height: auto;
+  min-height: 7.2rem;
+  padding: 1.6rem 3.1rem;
+  font-size: 3.2rem;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+.page--apropos .ap-hero__actions .btn {
+  min-height: 7.6rem;
+  font-size: 3.2rem;
+  line-height: 1.25;
+}
+
+/* ------------------------------------------------------- pourquoi ---- */
+
+/* Columns as ratios of the band rather than fixed rem widths: the band always spans the
+   viewport, so a rem column shrinks away from its far edge as --zoom comes down and the
+   card drifts inward. The comp's own measurements set the ratios — copy column 937,
+   card 905, gutters 86 and 43, gap 35 — so the split is the comp's at any zoom.
+   The comp's first title cap sits only 25px under the hero, hence the small top pad; the
+   deep bottom pad carries the blue disc that bridges into the vision band, since the card
+   ends at y 2801 and the pink starts at 3048. */
+.ap-why {
+  position: relative;
+  /* Above vision so the bridging disc can paint over the pink seam (PDF y 2835–3181). */
+  z-index: 1;
+  display: grid;
+  /* Comp ratios — copy 85.1, card 90.5, gap 35 — both tracks share the full band width. */
+  --bleed: 0px;
+  --ap-why-scale: 1;
+  grid-template-columns: minmax(0, 85.1fr) minmax(0, 90.5fr);
+  grid-template-areas: 'title media' 'copy media';
+  /* The card in the right column spans both rows and is deeper than the two on the left add up
+     to, and grid settles that by growing both rows equally — which put 28.7 of nothing between
+     the title and the copy, a gap the comp closes to 3.75. Naming the second row 1fr sends all
+     of the slack there instead, where the copy is top-aligned inside it and nothing moves.
+     align-content does not help: it distributes free space in the container, not the space a
+     spanning item forces into the rows it crosses. */
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  column-gap: 4rem;
+  width: 100%;
+  /* Band seams 1331 and 3048. Room under the carousel for the bridging disc. */
+  padding: 6rem 5rem 16rem 10.5rem;
+}
+
+.ap-why__title {
+  grid-area: title;
+  width: 100%;
+  /* Comp opens the title's line box at 1389.5, 10.5 below the card beside it.
+     Body opens 3.75 below the second line — kept as margin, not overlap. */
+  margin: 1.05rem 0 5.6rem;
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-size: calc(11.5rem * var(--ap-why-scale));
+  font-weight: 700;
+  line-height: 1.28;
+}
+
+.ap-why__title span {
+  display: block;
+}
+
+/* The comp sets the first line pink and only the second blue. */
+.ap-why__title span:first-child {
+  color: var(--pink);
+}
+
+/* Comp pitches body lines 38.5 apart but only 23.7 between the last line of one
+   paragraph and the first of the next. Copy opens 3.75 below the title's second line. */
+.ap-why__copy {
+  grid-area: copy;
+  display: grid;
+  gap: calc(4.2rem * var(--ap-why-scale));
+  justify-items: start;
+  align-content: start;
+  width: 100%;
+  margin-top: 0;
+  padding-left: 1.4rem;
+  font-family: var(--font-body);
+  font-size: calc(3.55rem * var(--ap-why-scale));
+  font-weight: 500;
+  line-height: 1.72;
+  text-align: justify;
+}
+
+.ap-why__copy p {
+  margin: 0;
+  line-height: 1.72;
+}
+
+/* The comp ends the link at x 923.8 in a column that runs to 931.7, so it is set to the
+   column's right edge, not its left. It follows the copy almost immediately: 2.75 under the
+   last line, against the 38.5 that separates the paragraphs. */
+.ap-why__more {
+  justify-self: end;
+  margin-top: -0.67rem;
+}
+
+/* No orange rule down the side: the comp marks the passage with a pair of blue quote
+   figures, the opening one above left and the closing one below right, and prints the
+   quote unconditionally rather than folding it behind the link above it. */
+.ap-why__quote {
+  display: grid;
+  gap: 0;
+  /* Comp opens the 66 at 2299.8, 9.3 under the link — cancel the copy grid's 2.37 gap. */
+  margin: calc(0.93rem - 2.37rem) 0 0;
+  padding: 0;
+  border: 0;
+  color: var(--eu-blue);
+  font-weight: 600;
+}
+
+/* Comp: 33.5 between the open mark and the first quote line, 3.85 between the last line and the close mark. */
+.ap-why__quote p {
+  margin: 3.35rem 0 0;
+  line-height: 1.45;
+}
+
+.ap-why__mark {
+  display: block;
+  color: var(--eu-blue);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 8.7rem;
+  font-weight: 700;
+  line-height: 0.7;
+}
+
+.ap-why__mark--close {
+  justify-self: end;
+  text-align: right;
+}
+
+.ap-why__mark--close {
+  justify-self: end;
+}
+
+.ap-why__media {
+  grid-area: media;
+  align-self: start;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Comp disc at x 1714.2 / y 2835.1 (453.2×346.1) — 205.8 visible, 133 past why bottom. */
+.ap-why__disque {
+  top: auto;
+  bottom: -13.31rem;
+  width: 20.58rem;
+  z-index: 2;
+}
+
+/* --------------------------------------------------------- carousel ----
+   The photograph sits on a pale rounded card; the pager is inside the card under it,
+   two large bare orange chevrons with thin orange rules between them, the current slide's
+   rule thickened. Circles around the arrows and grey dots were both inventions.
+   Measured at y 2678-2745: chevrons 39.1x66.7 at x 1053 and 1748, rules 65 wide and 3.1
+   tall on a 77.5 pitch, the lit one 9.6 tall. */
+
+/* Card 905.3 wide at fill #efefef, corner radius 47.6, running 1421.7 tall — and that height is
+   the whole pourquoi band's, since this column is the deeper of the two.
+
+   The photo shows 829.3 by 1216.3 of itself, inset 38 at the sides and 41 at the top. That is
+   not the size the file places it at: the placement is 961.6 by 1282.2, wider than the card and
+   deeper than the frame, and the comp clips it. Sizing the photo to the placement, which is what
+   tools/imgs.py reports and what this carried, made the card 16 too deep and the band with it. */
+.carousel {
+  margin: 0;
+  /* Comp inset: 41 top, 38 sides; card height 1421.7 is set by the 829.3×1216.3 visible frame. */
+  padding: 4.1rem 3.8rem 5.544rem;
+  border-radius: 4.76rem;
+  background: #efefef;
+}
+
+.carousel__img {
+  display: block;
+  width: 100%;
+  height: 121.63rem;
+  object-fit: cover;
+  border-radius: 2.4rem;
+}
+
+.carousel__bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.4rem;
+  /* Comp closes the photo at 2636.5 and opens the chevrons at 2678.7. */
+  margin-top: 4.224rem;
+}
+
+.carousel__arrow {
+  display: grid;
+  place-items: center;
+  width: 3.906rem;
+  height: 6.667rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--orange);
+  cursor: pointer;
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.carousel__arrow:hover {
+  color: var(--eu-blue);
+  transform: scale(1.12);
+}
+
+.carousel__rules {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* Comp: 65 wide on a 77.5 pitch, 3.06 tall, and 9.58 for the one that is lit. A rule that thin
+   is under a device pixel below about 1200px of window, so it is floored at one — the comp's
+   dashes are a printed hairline and they have to survive being a screen one. */
+.carousel__rule {
+  width: 6.5rem;
+  height: max(1px, 0.306rem);
+  padding: 0;
+  border: 0;
+  border-radius: 0.153rem;
+  background: var(--orange);
+  cursor: pointer;
+  transition: height 0.18s ease;
+}
+
+.carousel__rule--on {
+  height: 0.958rem;
+  border-radius: 0.479rem;
+}
+
+/* ---------------------------------------------------------- vision ---- */
+
+.ap-vision {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  /* Comp band 3048–3898: title at 75.6 from top; link closes ~124 above bottom. */
+  padding: 7.56rem var(--pad-x) 12.4rem 7.1rem;
+  overflow: visible;
+  background: var(--pink-band);
+  color: var(--white);
+}
+
+/* Live watermark removed from vision band — pink field stays clean. */
+.ap-vision::before {
+  content: none;
+}
+
+.ap-vision__title {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 9.5rem;
+  font-family: var(--font-display);
+  font-size: 11.5rem;
+  font-weight: 700;
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+.ap-vision__title span {
+  display: inline;
+}
+
+.ap-vision__title span + span {
+  margin-left: 0;
+}
+
+.ap-vision__title-accent {
+  color: var(--orange);
+}
+
+.ap-vision__copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: stretch;
+  /* Reach the band centre: half the content box plus half the right inset over the left. */
+  gap: 5rem;
+  width: calc(50% + (var(--pad-x, 16rem) - 7.1rem) / 2);
+  max-width: none;
+}
+
+.ap-vision__lead,
+.ap-vision__body {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.72;
+  text-align: justify;
+  text-align-last: left;
+  hyphens: none;
+  word-break: normal;
+  overflow-wrap: normal;
+  text-wrap: pretty;
+}
+
+/* Comp ends the link at the copy column's right edge, under the justified measure. */
+.ap-vision__copy > .readmore__toggle {
+  justify-self: end;
+  width: auto;
+  margin-top: 6rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ap-vision__list {
+  display: grid;
+  gap: 3.2rem;
+  margin: 3.6rem 0 3.6rem 2.4rem;
+  padding: 0;
+  max-width: 134.7rem;
+  list-style: none;
+  font-family: var(--font-body);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.55;
+  text-align: justify;
+}
+
+.ap-vision__list li {
+  position: relative;
+  padding-left: 4.2rem;
+}
+
+.ap-vision__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.2rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  background: var(--orange);
+}
+
+/* -------------------------------------------------------- readmore ---- */
+
+.readmore__body {
+  width: 100%;
+}
+
+.readmore__toggle {
+  margin-top: 2.4rem;
+  padding: 0 0 0.4rem;
+  border: 0;
+  border-bottom: 0.3rem solid currentcolor;
+  background: none;
+  font-family: var(--font-ui);
+  font-size: 3.5rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.readmore__toggle--dark {
+  color: var(--eu-blue);
+}
+
+.readmore__toggle--light {
+  color: var(--white);
+}
+
+.readmore__toggle:hover {
+  color: var(--orange);
+}
+
+/* ------------------------------------------------------ disclosure ---- */
+
+.ap-objectifs {
+  /* The accordion's own plates run x 76.4 to 1843.6, so the band's inset is theirs — measured
+     from the canvas edge, not the window's, or the rows run wider than every other band's
+     content and the copy inside them wraps at a width the comp never set. */
+  /* Band seams 3898 and 5281. The title's line box opens 109.5 under the top and the last row
+     closes 145 above the bottom. */
+  padding: 10.95rem calc(var(--bleed) + 7.64rem) 14.5rem;
+}
+
+.ap-objectifs .disclosure {
+  width: 100%;
+  max-width: none;
+  gap: 0.928rem;
+}
+
+.ap-objectifs .disclosure__row {
+  display: grid;
+  gap: 0;
+  width: 100%;
+}
+
+.ap-objectifs .disclosure__head,
+.ap-objectifs .disclosure__panel {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ap-objectifs .disclosure__head {
+  min-height: 12.17rem;
+  padding: 1.74rem 4.06rem 1.23rem 3.99rem;
+}
+
+.ap-objectifs .disclosure__titles {
+  gap: 1rem;
+}
+
+.ap-objectifs .disclosure__panel {
+  margin: 0;
+  padding: 2.694rem 5.16rem 3rem 1.7rem;
+  font-size: 3.2rem;
+  line-height: 1.65;
+  gap: 4.2rem;
+}
+
+/* The comp sets this over two lines with its lamp drawing to the left of them, not as
+   one centred line. */
+.ap-objectifs__title {
+  display: flex;
+  /* The comp lands the lamp's base within 1.3 of the text's baseline block, and the drawing is
+     shorter than the two lines beside it. Centred, it floated; and the row is given the text's
+     own height so the drawing cannot be what sets it. */
+  align-items: flex-end;
+  height: 24.2rem;
+  gap: 3.04rem;
+  /* Comp closes the second line's box at 4249.5 and opens the first row at 4333.65. Its two
+     lines are pitched 121 apart at 115px, so the leading is tighter than the page's usual 1.2. */
+  margin: 0 0 8.45rem;
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-size: 11.5rem;
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+/* The comp draws this rather than placing a picture of it, so it is here as the drawing: 14
+   paths lifted by tools/svgart.py. As a bitmap it was 245x266, an aspect ratio that belonged to
+   the crop rather than to the art, and it was that extra 24 of height — not the text — that was
+   setting the heading row's height and putting this band 24 over the comp. The box below is the
+   drawing's own, 238.3 x 259.8, of which the visible ink is the bottom 227. */
+.ap-objectifs__title img {
+  flex: none;
+  width: 23.83rem;
+  height: 25.98rem;
+  /* Comp starts it 5 left of the column every other band's content lines up with. */
+  margin-left: -0.504rem;
+}
+
+.ap-objectifs__title > span {
+  display: grid;
+}
+
+/* The comp's own gaps between these four rows are 19.25, 0 and 8.59 — it was laid out by hand
+   and never regularised. One number has to stand in for all three, and the one that keeps the
+   band's total at the comp's 802 for the rows is 9.28. */
+.disclosure {
+  display: grid;
+  gap: 0.928rem;
+}
+
+/* Each row carries a 19.8px blue bar down its left edge, inset a couple of pixels from
+   the top and bottom of the plate. */
+.disclosure__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  width: 100%;
+  /* All four plates are 121.7 in the comp, open or closed. The vertical padding is what is left
+     after a 38 kicker, a 7 gap and a 47 name — and the comp does not split it evenly: the kicker
+     opens 17.4 under the plate's edge and the name closes 12.3 above it. At 2rem each side the
+     two-line rows came out 129 and the plate stopped being the fixed height the comp draws. */
+  min-height: 12.17rem;
+  padding: 1.74rem 4.06rem 1.23rem 3.99rem;
+  border: 0;
+  border-left: 1.98rem solid var(--eu-blue);
+  background: #ededed;
+  color: var(--eu-blue);
+  text-align: left;
+  cursor: pointer;
+  /* A control's own label, not something anyone needs to copy — and leaving it selectable gives
+     a press somewhere for a drag to start from, which is half of how the selection slab over
+     the heading happened. */
+  user-select: none;
+  transition: background-color 0.16s ease;
+}
+
+.disclosure__head:hover,
+.disclosure__head:focus-visible {
+  background: #e2e2e2;
+}
+
+.disclosure__titles {
+  display: grid;
+  /* Comp leaves 7 between the kicker's line box and the name's. */
+  gap: 0.7rem;
+}
+
+/* Comp sets the qualifier at 38 in Changa 700 and the category word beside it at 36 in 500; see
+   Accordion.kicker. Advances hold to the tenth: "OBJECTIF" 137.5 at 36 against 136.9 for 500,
+   "SPÉCIFIQUE 1" 217.7 at 38 against 218.1 for 700. */
+.disclosure__kicker {
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 3.8rem;
+  line-height: 1;
+}
+
+.disclosure__lead {
+  font-weight: 500;
+}
+
+/* Only the kicker changes size across the pair. The general objective's title is two weights at
+   one size, 60 throughout. */
+.disclosure__kicker .disclosure__lead {
+  font-size: 3.6rem;
+}
+
+/* The comp sets the objective's own name in orange over the blue kicker. */
+.disclosure__title {
+  color: var(--orange);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 4.7rem;
+  line-height: 1;
+}
+
+/* The comp's chevron is orange, and wide rather than square: 42.9 by 25.1. A rotated
+   box cannot be that shape, so it is clipped to one. */
+.disclosure__chev {
+  flex: none;
+  width: 4.29rem;
+  height: 2.51rem;
+  background: var(--orange);
+  clip-path: polygon(0 0, 20% 0, 50% 55%, 80% 0, 100% 0, 50% 100%);
+  transition: transform 0.18s ease;
+}
+
+.disclosure__row--open .disclosure__chev {
+  transform: rotate(180deg);
+}
+
+/* Comp panel, measured under the open row: text opens 26.94 below the plate's edge and closes
+   30 above it, the two paragraphs are a full line apart, and the copy runs x 93 to 1792 inside
+   a plate that runs 76.4 to 1843.6. Lines 1, 3 and 4 all end exactly on 1792, which is how the
+   justification is known rather than assumed. */
+.disclosure__panel {
+  display: grid;
+  gap: 3.85rem;
+  padding: 2.694rem 5.16rem 3rem 1.7rem;
+  background: #f9f9f9;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.203;
+  text-align: justify;
+}
+
+/* The general objective has no kicker over it, so its name carries the row alone and
+   the comp sets it larger, and in blue rather than orange. */
+.disclosure--objectifs .disclosure__row:first-child .disclosure__title {
+  color: var(--eu-blue);
+  font-size: 6rem;
+  line-height: 1.15;
+}
+
+.disclosure--objectifs .disclosure__title {
+  line-height: 1.15;
+}
+
+.disclosure--objectifs .disclosure__kicker {
+  line-height: 1.12;
+}
+
+/* ------------------------------------------------- comment agit ---- */
+
+/* The title and the tab strip share a row, and the strip sits on the panel's top edge.
+   Stacking them instead — title, then tabs, then panel — is what made this band 110px taller
+   than the comp: the comp's tabs rise alongside the title's second line rather than clearing
+   it. The row is given the comp's own height (band top 5281 to panel top 5607, less the 50 of
+   padding above the title) with the title held to the top of it and the tabs to the bottom. */
+.ap-comment {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  row-gap: 0;
+  column-gap: 4rem;
+  padding: 6rem calc(var(--bleed) + 7rem) 16rem calc(var(--bleed) + 8.88rem);
+  background: var(--eu-blue);
+}
+
+/* So the tabs and the panel are placed by the band's grid rather than stacked in a box of
+   their own; the component still owns their markup and behaviour. */
+.axes {
+  display: contents;
+}
+
+.ap-comment__title {
+  grid-area: 1 / 1;
+  align-self: start;
+  margin: 0 0 1rem;
+  max-width: 92rem;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 8.6rem;
+  font-weight: 700;
+  line-height: 1.28;
+}
+
+.ap-comment__lead {
+  grid-area: 2 / 1 / 3 / 3;
+  max-width: 110rem;
+  margin: 0 0 3rem;
+  color: rgb(255 255 255 / 92%);
+  font-size: 2.8rem;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+/* Three 136px squares sitting on the top edge of the panel, right-aligned, with the
+   open one filled and the closed ones reversed out of it. */
+.axes__tabs {
+  grid-area: 1 / 2;
+  align-self: end;
+  display: flex;
+  gap: 1.6rem;
+  justify-content: flex-end;
+  padding-right: 0;
+  margin-bottom: -0.2rem;
+}
+
+.axes__tab {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1.2rem;
+  width: 16rem;
+  height: 16rem;
+  padding: 1.2rem;
+  border: 0;
+  background: var(--white);
+  color: var(--orange);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.8rem;
+  line-height: 1.28;
+  cursor: pointer;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+.axes__tab span {
+  display: block;
+  max-width: 100%;
+  line-height: 1.28;
+  text-align: center;
+}
+
+.axes__icon {
+  width: 8rem;
+  height: 7.2rem;
+  object-fit: contain;
+}
+
+.axes__tab:hover {
+  background: #ffe6c4;
+}
+
+.axes__tab--on {
+  background: var(--orange);
+  color: var(--white);
+}
+
+/* The icons ship in one ink, so the open tab reverses its own out to white rather than
+   loading a second copy of the same drawing. */
+.axes__tab--on .axes__icon {
+  filter: brightness(0) invert(1);
+}
+
+.axes__panel {
+  grid-area: 2 / 1 / 3 / 3;
+  box-sizing: border-box;
+  display: grid;
+  gap: 2.4rem;
+  align-content: start;
+  min-height: 52rem;
+  padding: 6rem 5.5rem 5rem 7rem;
+  background: var(--orange);
+  color: var(--white);
+}
+
+.axes__kicker {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 4.4rem;
+  line-height: 1.3;
+}
+
+.axes__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 5.8rem;
+  font-weight: 700;
+  line-height: 1.22;
+}
+
+.axes__body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 3.9rem;
+  font-weight: 500;
+  line-height: 1.68;
+  text-align: justify;
+}
+
+.axes__body + .axes__body {
+  margin-top: 0.8rem;
+}
+
+/* ------------------------------------------------------- projets ---- */
+
+.ap-projets {
+  /* Band seams 6175 and 6966. The title's line box opens 70.5 under the top; the logo row's
+     ink ends 113 above the bottom. */
+  padding: 7.05rem var(--pad-x) 11.86rem calc(var(--bleed) + 7.7rem);
+}
+
+/* The comp sets the heading in pink and drops to blue for the line under it. */
+.ap-projets__title {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0 0 3.195rem;
+  color: var(--pink);
+  font-family: var(--font-display);
+  font-size: 11.5rem;
+  font-weight: 700;
+  line-height: 1.02;
+}
+
+.ap-projets__title-main {
+  display: block;
+}
+
+.ap-projets__subtitle {
+  display: block;
+  margin-top: 0.2rem;
+  padding-left: 3.6rem;
+  letter-spacing: 0.03em;
+  color: var(--eu-blue);
+  font-size: 7.9rem;
+  line-height: 1.02;
+}
+
+.ap-projets__body {
+  width: 100%;
+  max-width: none;
+  font-family: var(--font-body);
+  font-size: 3.8rem;
+  font-weight: 500;
+  line-height: 1.68;
+  text-align: justify;
+  text-align-last: left;
+  hyphens: none;
+}
+
+/* Each mark at its own width, not six equal columns.
+   These six are a wordmark, a rounded app icon, a stack of figures, Arabic calligraphy and
+   two long lockups, and their aspect ratios run from 0.9 to 4.6. Sizing them to a shared
+   column width therefore sets their heights 58 to 291 design px apart — go4youth a sliver,
+   swafy towering over the row — which is what made this band 111px too tall. The comp gives
+   each mark its own width (198 131 134 220 185 262) so they come out on a common optical
+   height instead, which is what the row is carrying from the data. Spread between x 115 and
+   1805: the row is inset 38 further than the body column on both sides. */
+/* Comp runs the row's ink 6690 to 6853, so 163 tall, opening 25.25 under the body copy. Given
+   as an explicit height rather than left to the tallest mark: the marks are placed by width, so
+   whichever of the six happens to be proportionally deepest would otherwise set the row's
+   height and the band's total with it. */
+/* Row ink is x 115-1805 on the comp canvas — 38px further in than the body column at
+   x 77, so the strip breaks out of the band's side padding to reclaim that spread. */
+.ap-projets__logos {
+  position: relative;
+  width: calc(100% + 7.6rem);
+  height: 15.9rem;
+  margin: 2.525rem -3.8rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ap-projets__logos > li {
+  position: absolute;
+}
+
+.ap-logo {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.ap-logo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.18s ease;
+}
+
+/* The comp greys every mark at rest on this band, including Jeun'ESS. */
+.ap-logo__grey {
+  opacity: 0.75;
+  filter: grayscale(1);
+}
+
+.ap-logo__colour {
+  opacity: 0;
+}
+
+.ap-logo:hover .ap-logo__colour,
+.ap-logo:focus-visible .ap-logo__colour {
+  opacity: 1;
+}
+
+.ap-logo:hover .ap-logo__grey,
+.ap-logo:focus-visible .ap-logo__grey {
+  opacity: 0;
+  filter: none;
+}
+
+/* --------------------------------------------------- territoires ---- */
+
+/* The band is orange, not white: the comp fills the full 1920 at #f2a849 and sets the
+   left column's copy in white on it, then floats a white card over the right half for
+   the map. Building it as a white band put white text on white. */
+/* No overflow clip, for the same reason as the vision band: the disc hangs 101.6 above this
+   band's top edge onto the white band above, and clipping the band cut it off at the seam. */
+.ap-territoires {
+  position: relative;
+  /* Stack above the band above so the hanging disc is not clipped under it. */
+  z-index: 1;
+  display: grid;
+  /* Comp ratios — copy narrower, map card dominant. */
+  grid-template-columns: minmax(0, 72fr) minmax(0, 100fr);
+  grid-template-areas: 'main map';
+  align-items: stretch;
+  column-gap: 6.5rem;
+  width: 100%;
+  padding: 8rem 5rem 10rem 10.5rem;
+  background: var(--orange);
+}
+
+/* Comp disc at x 1692.5 / y 6864.4 — hangs 101px above orange (6965), 227.5 visible. */
+.ap-territoires__disque {
+  top: -10.16rem;
+  width: 22.75rem;
+  /* Over the map card corner; legend keeps padding-right so copy stays clear. */
+  z-index: 2;
+}
+
+.ap-territoires__main {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  gap: 3.4rem;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+.ap-territoires__title {
+  margin: 0;
+  width: 100%;
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-size: 8rem;
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+.ap-territoires__copy {
+  display: grid;
+  gap: 2.6rem;
+  justify-items: start;
+  width: 100%;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.68;
+  text-align: justify;
+}
+
+.ap-territoires__copy > .readmore__toggle {
+  justify-self: end;
+  margin-top: 0.4rem;
+}
+
+/* Measured card: x 969 to 1889, 920 wide by 1262 tall, holding the legend, the six
+   project marks and the map. */
+/* The card is the comp's 920.4 x 1261.7, and its three regions are placed inside it rather than
+   laid out by a grid. The comp does not arrange them in rows and columns: the legend runs the
+   card's width, the six marks sit in a narrow strip inset further than the legend, and the map
+   is a fixed block to their right whose top starts above where the marks do. A grid can be bent
+   into that shape with percentage tracks and asymmetric padding, which is what was here, but
+   every one of those percentages then depends on the others and on the card's own padding, so
+   moving one moves three. Placed absolutely, each region carries only its own comp numbers.
+
+   Fixing the height also stops whatever is in the card from setting it. The readout was, and it
+   was 84 of the 1346 this measured before. */
+.ap-map {
+  grid-area: map;
+  align-self: stretch;
+  justify-self: stretch;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 22rem minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'legend legend'
+    'picks plate';
+  column-gap: 4rem;
+  row-gap: 2.4rem;
+  margin-top: 0;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  min-height: 100%;
+  height: 100%;
+  padding: 5.5rem 5.5rem 4.5rem 6.5rem;
+  border-radius: 7.05rem;
+  background: var(--white);
+}
+
+/* Positions are percentages of the comp card (92.04 × 126.171rem) so logos and map stay
+   aligned when the fr column is wider than the artboard at 70% zoom. */
+.ap-map__legend {
+  position: static;
+  grid-area: legend;
+  left: auto;
+  top: auto;
+  width: auto;
+  /* Keep title clear of the corner disc that peeks over the card. */
+  padding-right: 12rem;
+}
+
+.ap-map__title {
+  /* Comp closes this at 116 and opens the note at 130.45. */
+  margin: 0 0 1.445rem;
+  max-width: 100%;
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-size: 4.2rem;
+  font-weight: 700;
+  line-height: 1.24;
+  overflow-wrap: anywhere;
+}
+
+.ap-map__note {
+  margin: 0;
+  color: var(--orange);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.4rem;
+  /* Comp pitches its two lines 26 apart at 21px. */
+  line-height: 1.35;
+}
+
+/* The chosen mark is in colour with a blue rule beside it; the other five are greyed, which is
+   the same treatment the six logos get on the homepage.
+
+   Comp strip: x 95 to 273 for the marks with the chosen one's rule at 280-289, y 367 to 1043 —
+   so they are inset from the map's top and bottom and otherwise share its depth, spread down
+   the strip rather than stacked at its top. */
+.ap-map__picks {
+  position: static;
+  grid-area: picks;
+  left: auto;
+  top: auto;
+  width: auto;
+  height: 100%;
+  display: grid;
+  gap: 1.6rem;
+  align-content: space-between;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ap-pick {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.2rem 0.5rem 0.2rem 0;
+  border: 0;
+  border-right: 0.6rem solid transparent;
+  background: none;
+  cursor: pointer;
+  opacity: 0.55;
+  filter: grayscale(1);
+  transition: opacity 0.16s ease, border-color 0.16s ease, filter 0.16s ease;
+}
+
+.ap-pick:hover,
+.ap-pick:focus-visible {
+  opacity: 0.85;
+}
+
+.ap-pick--on {
+  border-right-color: var(--eu-blue);
+  opacity: 1;
+  filter: none;
+}
+
+.ap-pick img {
+  width: 100%;
+  height: 12.5rem;
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* The base carries the country, the overlay the chosen project's gouvernorats, and the names sit
+   on the shapes at the offsets the comp letters them at.
+
+   This box is the tight bounds of the 26 governorate paths in the comp — page x 1345 to 1765,
+   y 7380 to 8267, which is 376.4 / 289.8 inside the card and 420 by 887 — and so it is also the
+   rect the two bitmaps were rendered from (tools/apropos_assets.py MAP). Sized to anything else,
+   `contain` letterboxes the map inside its own box and every label percentage below drifts off
+   its shape: the box that was here was 439 by 867, 4% wider and 2% shorter than the artwork, and
+   the drift showed up as names creeping south down the country. */
+.ap-map__plate {
+  position: relative;
+  grid-area: plate;
+  left: auto;
+  top: auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  justify-items: center;
+}
+
+/* Fixed PDF proportion — grows with the stretched card. */
+.ap-map__fit {
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 56rem);
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 420 / 887;
+}
+
+.ap-map__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.ap-map__gov {
+  /* The comp fills the country #616063 at 15%, which lands on this. Flat, because the shapes
+     overlap at their shared borders and stacked transparency would draw every seam twice. */
+  fill: #dcdcdd;
+  stroke: var(--white);
+  stroke-width: 1;
+  transition: fill 0.18s ease;
+}
+
+.ap-map__gov--on {
+  fill: var(--map-lit, var(--pink));
+}
+
+/* The comp sets these at 12px, and at 1:1 that is 12 real pixels — readable, so it is what
+   ships. The floor is for windows narrower than the comp, where 1.2rem falls under 10px and
+   the names stop being names; it costs the widest of them, SIDI BOUZID, about a governorate's
+   width of overhang at 1280 and nothing at all at 1600 and up.
+
+   Anchored by their centres, not their corners: a name is placed at the centre of its own
+   path, and a corner-anchored box moves that centre by half the word — which is most of a
+   governorate for the long ones. */
+.ap-map__label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: max(13px, clamp(1.45rem, 1.05vw, 1.85rem));
+  line-height: 1.08;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0.12rem 0.35rem rgb(0 0 0 / 50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.ap-map__label--compact {
+  font-size: max(12px, clamp(1.28rem, 0.95vw, 1.55rem));
+  letter-spacing: 0.01em;
+}
+
+/* Desktop keeps the readout off the card floor, as the comp does; mobile rules below
+   promote it under the map when governorate labels are hidden. */
+.ap-map__readout {
+  display: none;
+}
+
+.ap-map__readout strong {
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 700;
+}
+
+.ap-map__readout p {
+  margin: 0.6rem 0 0;
+  color: var(--orange);
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* -------------------------------------------------------- impact ---- */
+
+.ap-impact {
+  box-sizing: border-box;
+  height: auto;
+  overflow: hidden;
+  padding: 4.8rem var(--pad-x) 4.8rem;
+  background: var(--eu-blue);
+  color: var(--white);
+  text-align: center;
+}
+
+.ap-impact__title {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto 1.8rem;
+  padding: 0;
+  background: none;
+  font-family: var(--font-display);
+  font-size: 11.5rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.ap-impact__body {
+  margin: 0 auto 3.2rem;
+  max-width: 148rem;
+  font-family: var(--font-body);
+  font-size: 3.6rem;
+  font-weight: 500;
+  line-height: 1.68;
+}
+
+.ap-kpis {
+  display: grid;
+  gap: 2rem 4.8rem;
+  width: 100%;
+  max-width: 180rem;
+  margin: 0 auto 0.8rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ap-kpis--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 120rem;
+  margin-bottom: 2.4rem;
+}
+
+.ap-kpis--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 2.4rem;
+}
+
+.ap-kpis--3:last-of-type {
+  margin-bottom: 0;
+}
+
+.ap-kpis--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.6rem 3.6rem;
+  margin-bottom: 0;
+  align-items: stretch;
+}
+
+.ap-kpi {
+  display: grid;
+  justify-items: center;
+  justify-content: center;
+  align-content: start;
+  gap: 1.2rem;
+  min-height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.2rem 1.6rem 1.6rem;
+  /* Beat `.page li { text-align: justify }` from tokens.css */
+  text-align: center !important;
+  text-align-last: center !important;
+}
+
+.ap-kpi--featured {
+  padding: 2.8rem 2.4rem 3rem;
+  border-radius: 1.6rem;
+  background: var(--orange);
+}
+
+/* The one figure the comp opens a chart from, so the only one that is a control. */
+.ap-kpi__open {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 1.4rem;
+  position: relative;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: center !important;
+  text-align-last: center !important;
+  cursor: pointer;
+}
+
+.ap-kpi__hint {
+  justify-self: center;
+  margin-top: 0.6rem;
+  border-bottom: 0.2rem solid currentcolor;
+  font-family: var(--font-ui);
+  font-size: 2.2rem;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.16s ease;
+}
+
+.ap-kpi__open:hover .ap-kpi__hint,
+.ap-kpi__open:focus-visible .ap-kpi__hint {
+  opacity: 1;
+}
+
+.ap-kpi__value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 9.2rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: center !important;
+}
+
+.ap-kpi__label {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 auto;
+  color: var(--orange);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 4.4rem;
+  line-height: 1.16;
+  text-align: center !important;
+  text-align-last: center !important;
+  text-transform: uppercase;
+}
+
+.ap-kpi__label > span {
+  display: block;
+  width: 100%;
+  text-align: center !important;
+  text-align-last: center !important;
+}
+
+.ap-kpi--featured .ap-kpi__value,
+.ap-kpi--featured .ap-kpi__label,
+.ap-kpi--featured .ap-kpi__note {
+  color: var(--white);
+}
+
+.ap-kpi__note {
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 auto;
+  font-family: var(--font-body);
+  font-size: 3.6rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center !important;
+  text-align-last: center !important;
+}
+
+.ap-kpi__note > span {
+  display: block;
+  width: 100%;
+  text-align: center !important;
+  text-align-last: center !important;
+}
+
+.ap-impact__pending-note {
+  max-width: 110rem;
+  margin: 4rem 0 2.5rem;
+  color: var(--white);
+  font-size: 2.4rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.ap-kpis--pending {
+  opacity: 0.88;
+}
+
+.ap-kpi--pending {
+  border-style: dashed;
+  background: rgb(255 255 255 / 8%);
+}
+
+.ap-kpi--pending .ap-kpi__value {
+  color: rgb(255 255 255 / 55%);
+}
+
+/* ------------------------------------------------------ partenaires ---- */
+
+/* Vertical rhythm off the band's own seams, 9792 and 11726. Every gap below is the distance
+   between two line boxes in the comp rather than a round number, which is why they read as
+   arbitrary: 66 to the title, 13 from it to the lede, 113 from the lede to the orange, 58.5
+   from the orange's edge to the tab labels, 30 under their underline, 42 to the plate, 77
+   under it. They sum to the comp's 1934 exactly. */
+.ap-partners {
+  position: relative;
+  z-index: 1;
+  padding: 6.5rem 0 0;
+  text-align: center;
+}
+
+.ap-partners__switch {
+  margin-top: 5rem;
+  box-sizing: border-box;
+  /* 100vw + centering calc overflows by the scrollbar gutter; full-bleed via
+     the section's own width instead. */
+  width: 100%;
+  margin-left: 0;
+  padding: 5.5rem 0 12.5rem;
+  background: var(--orange);
+  overflow: visible;
+  /* Tab row and lede share one measure; the plate runs slightly wider. */
+  --partners-tabs-w: min(100%, 187.8rem);
+  --partners-plate-w: min(100%, 191.32rem);
+}
+
+.ap-partners__switch--collapsed {
+  padding-bottom: 5.5rem;
+}
+
+.ap-partners__title {
+  margin: 0 0 2.8rem;
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-size: 8.5rem;
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+/* The comp sets the first two lines to exactly 1470, so the measure has no slack in it and the
+   padding has to be added on top of it rather than taken out of it — border-box was subtracting
+   the 154 of side padding from the 1470 and the last words fell to a fourth line. */
+.ap-partners__body {
+  margin: 0 auto;
+  padding: 0 max(var(--pad-x), 9rem);
+  max-width: calc(147rem + 2 * var(--pad-x));
+  font-family: var(--font-body);
+  font-size: 3.6rem;
+  font-weight: 500;
+  line-height: 1.68;
+  text-align: justify;
+  text-align-last: left;
+}
+
+/* No rule runs under the closed labels — the comp draws exactly one blue bar, under the open
+   one, and nothing under the other two. A rule under all three was here, and it turned a set
+   of three labels into a set of three tabs in a tab strip, which is a different thing to look
+   at. All three labels stay white either way. */
+/* Wider than the band's body column: the comp centres the three labels on 334, 960 and 1586,
+   so the columns are 626 and the row runs 21 to 1899 — past the 77 the rest of the band is
+   inset by. Held to the body column, the third label's second line ("DE MISE EN OEUVRE", 541
+   wide) had 533 to sit in and wrapped to a third line, which is where 75 of the band's excess
+   height came from. */
+.ap-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: var(--partners-tabs-w, min(100%, 187.8rem));
+  margin: 0 auto;
+}
+
+.ap-tab {
+  display: grid;
+  justify-items: center;
+  padding: 0 0.8rem;
+  border: 0;
+  background: none;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 5.8rem;
+  /* Comp pitches the two lines 75 apart at 62px. */
+  line-height: 1.24;
+  cursor: pointer;
+}
+
+/* The comp's bar is its own length — 533, narrower than the label above it and narrower than
+   the column — so it cannot be the label's bottom border. Every label reserves the room for
+   one, so nothing below moves when the open tab changes. */
+.ap-tab__bar {
+  width: 53.3rem;
+  height: 2.2rem;
+  margin-top: 0.45rem;
+  background: transparent;
+  transition: background-color 0.18s ease;
+}
+
+.ap-tab:hover .ap-tab__bar {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.ap-tab--on .ap-tab__bar,
+.ap-tab--on:hover .ap-tab__bar {
+  background: var(--eu-blue);
+}
+
+.ap-panel {
+  width: var(--partners-plate-w, min(100%, 191.32rem));
+  margin: 0 auto;
+  padding: 3rem 0 0;
+}
+
+.ap-panel:has(.ap-orgs) {
+  width: var(--partners-plate-w, min(100%, 191.32rem));
+  max-width: none;
+  padding: 3rem 0 0;
+  overflow: visible;
+}
+
+.ap-panel:has(.ap-orgs) .ap-panel__body {
+  margin-bottom: 0;
+}
+
+.ap-panel__body {
+  box-sizing: border-box;
+  width: var(--partners-tabs-w, min(100%, 187.8rem));
+  max-width: none;
+  margin: 0 auto;
+  padding: 0;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 3.8rem;
+  font-weight: 500;
+  line-height: 1.58;
+  text-align: justify;
+  text-align-last: left;
+}
+
+.ap-impl {
+  list-style: none;
+  margin: 3.2rem auto 0;
+  padding: 0;
+  width: var(--partners-tabs-w, min(100%, 187.8rem));
+  max-width: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.4rem;
+  align-items: stretch;
+}
+
+.ap-impl__card {
+  display: grid;
+  grid-template-rows: 14rem auto 1fr;
+  gap: 1.4rem;
+  align-content: start;
+  height: 100%;
+  padding: 2.2rem 2.4rem 2.6rem;
+  border-radius: 1.6rem;
+  background: var(--white);
+  box-shadow: 0 0.8rem 2.4rem rgb(7 78 162 / 0.08);
+}
+
+.ap-impl__logo {
+  display: grid;
+  place-items: center;
+  min-height: 14rem;
+  padding: 1.2rem 1.6rem;
+  border-radius: 1rem;
+  background: var(--white);
+}
+
+.ap-impl__logo img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: 11rem;
+  object-fit: contain;
+  object-position: center;
+  background: transparent;
+}
+
+.ap-impl__org {
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-size: 2.7rem;
+  font-weight: 700;
+  line-height: 1.28;
+  text-align: center;
+}
+
+.ap-impl__role {
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 2.4rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.ap-eu {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 5rem;
+  align-items: center;
+  margin: 3.2rem auto 0;
+  width: var(--partners-tabs-w, min(100%, 187.8rem));
+  max-width: none;
+  padding: 4rem 5rem;
+  border-radius: 2rem;
+  background: var(--white);
+  box-shadow: 0 0.8rem 2.4rem rgb(7 78 162 / 0.08);
+}
+
+.ap-eu__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  min-width: 0;
+}
+
+.ap-eu__flags-combo {
+  display: block;
+  width: 100%;
+  max-width: 52rem;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+}
+
+.ap-eu__flags {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2.8rem;
+  align-items: end;
+  width: 100%;
+  max-width: 52rem;
+}
+
+.ap-eu__flag {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  object-position: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.ap-eu__labels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2.8rem;
+  align-items: end;
+  width: 100%;
+  max-width: 52rem;
+  font-family: var(--font-body);
+  font-size: 2.2rem;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.ap-eu__label {
+  display: grid;
+  align-content: end;
+  min-height: 6rem;
+}
+
+.ap-eu__label--eu {
+  color: var(--eu-blue);
+  font-weight: 700;
+}
+
+.ap-eu__label--tn {
+  color: #c8102e;
+  font-weight: 600;
+}
+
+.ap-eu__copy {
+  text-align: center;
+}
+
+.ap-eu__copy h3 {
+  margin: 0 0 1.8rem;
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-size: 3.8rem;
+  font-weight: 700;
+  line-height: 1.22;
+  text-align: center;
+}
+
+.ap-eu__copy p {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 2.7rem;
+  font-weight: 500;
+  line-height: 1.55;
+  text-align: center;
+}
+
+/* The plate is 1913.2 of the comp's 1920 wide. Logos are drawn inside the same SVG
+   viewBox as the path so they stay locked to the speech bubble at every size. */
+.ap-orgs {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  /* Comp: 42 from the tab bar to the plate lip; spout clears the lede above. */
+  margin: 4.2rem auto 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.ap-orgs__plate {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--plate-aspect-w, 1913.23) / var(--plate-aspect-h, 986.87);
+  overflow: hidden;
+}
+
+.ap-orgs__plate image {
+  image-rendering: auto;
+}
+
+/* Mobile grid fallback — hidden on desktop where the SVG carries the marks. */
+.ap-orgs__marks {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* -------------------------------------------------------- avenir ---- */
+
+.ap-avenir {
+  position: relative;
+  z-index: 2;
+  /* The signpost is absolute at the band foot, so horizontal padding only needs to clear
+     its width plus the comp's right inset — not a full empty column up the whole band. */
+  --avenir-art-gutter: 63rem;
+  padding: 3.2rem calc(var(--bleed) + var(--avenir-art-gutter)) 5.1rem calc(var(--bleed) + 6.44rem);
+  /* Comp band y 11726–13053 (1327px). Tall enough that the foot-anchored signpost never
+     grows up under the orange partners block above (which sits at z-index 1). */
+  min-height: 132rem;
+  overflow: visible;
+  background: var(--pink-band);
+  color: var(--white);
+}
+
+/* Comp sets the two title lines 138 apart at 115px, so the leading is 1.2, and closes the second
+   line's box at 12034 against a body that opens at 12037 — all but nothing between them. The 1.05
+   and the 3rem that were here were two guesses that cancelled out to roughly the right total. */
+.ap-avenir__title {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: 11.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.ap-avenir__title span {
+  display: block;
+}
+
+/* Comp closes the third line's box at 12152 and opens the first row at 12219. */
+.ap-avenir__body {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: none;
+  margin-bottom: 4.2rem;
+  font-family: var(--font-body);
+  font-size: 3.9rem;
+  font-weight: 500;
+  line-height: 1.68;
+  text-align: justify;
+  text-align-last: left;
+  hyphens: none;
+  text-wrap: pretty;
+}
+
+/* On the pink band the rows are near-white cards, not rules on the pink: the comp fills
+   each at #f9f9f9, sets the titles in pink and the open body in black on white, and
+   draws the chevrons orange. */
+.ap-avenir .disclosure {
+  position: relative;
+  z-index: 1;
+  gap: 0.49rem;
+  width: 100%;
+  max-width: none;
+}
+
+.ap-avenir .disclosure__row {
+  display: grid;
+  gap: 0;
+}
+
+/* The bar down the left edge is orange here, not the blue the objectifs rows use: on the pink
+   band the comp fills it #f2a849, the same orange as the chevron. Right padding is the comp's
+   own 24 from the chevron's edge (rows end 1217, chevrons 1193). */
+.ap-avenir .disclosure__head {
+  min-height: 8.48rem;
+  padding: 1.4rem 2.4rem 1.4rem 3.99rem;
+  border-left-color: var(--orange);
+  background: #f9f9f9;
+  color: var(--orange);
+}
+
+.ap-avenir .disclosure__head:hover,
+.ap-avenir .disclosure__head:focus-visible {
+  background: var(--white);
+}
+
+.ap-avenir .disclosure__title {
+  color: var(--pink);
+  font-size: 4.9rem;
+}
+
+.ap-avenir .disclosure__row--open .disclosure__head {
+  min-height: 12.32rem;
+}
+
+.ap-avenir .disclosure__row--open .disclosure__title {
+  font-size: 6.4rem;
+}
+
+.ap-avenir .disclosure__panel {
+  padding: 2.8rem 3.6rem 4rem 3.06rem;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 3.6rem;
+  font-weight: 500;
+  line-height: 1.65;
+  text-align: justify;
+  text-align-last: left;
+  hyphens: none;
+  text-wrap: pretty;
+}
+
+.ap-avenir .disclosure__panel p {
+  margin: 0;
+  line-height: 1.65;
+}
+
+/* The signpost, keyed out of the comp's pink so it composites onto this band.
+
+   Placed by its foot, not its head. Its own bounds in the comp are 602 x 985 at x 1295, and
+   the lower one is the band's bottom seam: the post is planted in it and cut there. Anchored
+   from the top instead, a band that grows by an open row leaves the post hanging in mid-air,
+   and the earlier crop — 615 x 675, guessed from the arrows alone — cut 310px of post off and
+   carried 20px of empty band on the right that pushed the signs off the page edge. */
+.ap-avenir__art-slot {
+  position: absolute;
+  right: calc(var(--bleed) + 2.3rem);
+  bottom: 0;
+  z-index: 1;
+  width: 60.2rem;
+  max-width: calc(100% - var(--bleed) - 6.44rem);
+  pointer-events: none;
+}
+
+.ap-avenir__art-slot .cms-editable--image,
+.ap-avenir__art {
+  display: block;
+  width: 96%;
+  max-width: 60.2rem;
+  height: auto;
+  margin-left: auto;
+  position: static;
+}
+
+/* ---------------------------------------------------------------------------
+   The three overlays.
+
+   Comp pages 2-4 each hold page 1 with one card open over it: a project's fiche on the
+   six logos, the vision's principles on the pink band, and the sectors chart on the
+   figure that names them. All three dim the page and none of them move it, so the shell
+   is shared and only the card's colour and contents differ.
+   --------------------------------------------------------------------------- */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  /* Sides only. The room above and below is Sheet()'s to give, since it is the one
+     measuring the card against the window; padding here as well was counted twice and
+     put the sheet itself back on a scrollbar with the card inside it already fitting. */
+  padding: 0 3rem;
+  overflow-y: auto;
+  background: rgb(35 35 38 / 62%);
+  animation: sheet-in 0.18s ease-out;
+}
+
+.sheet__card {
+  position: relative;
+  /* Comp page 2 fiche is 1575.6 wide. Chart and vision override below. */
+  width: min(157.6rem, 100%);
+  /* Sheet() measures the card and sets this so the whole of it lands inside the window.
+     The comp prints each card whole on a page of its own, so neither a clamped height
+     nor an inner scrollbar belongs here: shrinking is what keeps it one page. */
+  zoom: var(--fit, 1);
+  border-radius: 4rem;
+  box-shadow: 0 2.4rem 7rem rgb(0 0 0 / 30%);
+  animation: card-in 0.2s ease-out;
+}
+
+.sheet__card:focus {
+  outline: none;
+}
+
+.sheet__card--pale {
+  background: var(--white);
+}
+
+.sheet__card--chart {
+  width: min(145rem, 100%);
+  /* The comp's own plate height. The card is zoomed to the window, so it is a drawing
+     size now and not a promise about how much of the screen the chart takes. */
+  min-height: 101rem;
+  background: var(--white);
+}
+
+/* Comp page 3: the vision plate is 1576 x 1816, pink with the EU4Y watermark. The earlier
+   118 rem made every line wrap early and left the closing copy unreachable behind a scroll
+   the viewport invented. The plate itself is the background so the watermark is the comp's,
+   not a redraw.
+   No min-height: the comp's 1816 is taller than this copy needs, and every unused row of it
+   was height the card then had to be zoomed down to fit — which cost the type its size for
+   nothing. The plate stretches over whatever the copy comes to instead, and the watermark
+   is soft enough to take it. */
+.sheet__card--pink {
+  width: min(157.6rem, 100%);
+  overflow: hidden;
+  background: #e64171;
+}
+
+.sheet__card--pink::before {
+  content: 'EU4Y';
+  position: absolute;
+  right: -6rem;
+  bottom: -10rem;
+  z-index: 0;
+  color: rgb(255 255 255 / 0.1);
+  font-family: var(--font-display);
+  font-size: 48rem;
+  font-weight: 700;
+  letter-spacing: -2.8rem;
+  line-height: 0.72;
+  pointer-events: none;
+}
+
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.6rem);
+  }
+}
+
+.sheet__close {
+  position: absolute;
+  right: 2.4rem;
+  top: 2.4rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 5.4rem;
+  height: 5.4rem;
+  padding: 0 0 0.5rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 8%);
+  font-family: var(--font-ui);
+  font-size: 4.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.sheet__card--pale .sheet__close,
+.sheet__card--chart .sheet__close {
+  color: var(--eu-blue);
+}
+
+.sheet__card--pink .sheet__close {
+  z-index: 3;
+  background: transparent;
+  color: var(--white);
+}
+
+.sheet__close:hover,
+.sheet__close:focus-visible {
+  background: var(--orange);
+  color: var(--white);
+}
+
+/* --- the project fiche ---------------------------------------------------- */
+
+/* Measured off comp page 2: the sheet is 1576 wide with its type starting 95px in, the
+   quote bubble occupies the top right, the five fields run three down the left and two
+   down the right, and the pill sits under the right-hand pair. */
+.fiche {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-areas:
+    'head quote'
+    'summary summary'
+    'fields fields'
+    'cta cta';
+  grid-template-columns: minmax(0, 54.6fr) minmax(0, 45.4fr);
+  /* Comp page 2: 1575.6 x 872.9. The name opens 14 under the card's top edge, so the
+     top padding is that rather than a round number — 4.5 rem was 31 too much and the
+     surplus ran out the bottom.
+     A floor rather than a height: the comp letters one project, and the five that follow
+     carry longer quotes and longer lists of gouvernorats. Pinned, the surplus left the
+     card at the foot and ran under the page; as a floor the card grows and Sheet() zooms
+     it back inside the window. */
+  min-height: 87.29rem;
+  padding: 1.4rem 9.5rem 3.2rem;
+  box-sizing: border-box;
+}
+
+.fiche::before {
+  content: attr(data-mark);
+  position: absolute;
+  left: 50%;
+  bottom: -6rem;
+  z-index: 0;
+  color: rgb(7 78 162 / 0.08);
+  font-family: var(--font-display);
+  font-size: 28rem;
+  font-weight: 700;
+  letter-spacing: -1.2rem;
+  line-height: 0.8;
+  pointer-events: none;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.fiche > * {
+  position: relative;
+  z-index: 1;
+}
+
+.fiche__head {
+  grid-area: head;
+  min-width: 0;
+  padding-right: 2.4rem;
+  container-type: inline-size;
+}
+
+.fiche__name {
+  margin: 0;
+  max-width: 100%;
+  color: var(--project-colour, var(--pink));
+  font-family: var(--font-display);
+  /* Long acronyms (IRADA4YOUTH, MAGHROUM'IN) must stay inside the head column
+     beside the quote bubble — the comp size is the ceiling, not a fixed width. */
+  font-size: clamp(7.2rem, 12.5cqi, 11.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  overflow-wrap: break-word;
+}
+
+.fiche__tagline {
+  margin: 1.6rem 0 0;
+  color: var(--orange);
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.fiche__pending {
+  margin: 2.4rem 0 3.2rem;
+  color: var(--eu-blue);
+  font-family: var(--font-body);
+  font-size: 3rem;
+  line-height: 1.5;
+}
+
+.fiche__quote {
+  position: relative;
+  grid-area: quote;
+  align-self: start;
+  justify-self: end;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0.4rem 0 0;
+  padding: 3.4rem 4.2rem 3.8rem;
+  border-radius: 3.4rem;
+  background: var(--project-colour, var(--pink));
+  color: var(--project-on, var(--white));
+}
+
+/* The bubble's tail, which the comp drops from its lower left. */
+.fiche__quote::after {
+  content: '';
+  position: absolute;
+  left: 5.6rem;
+  top: 100%;
+  width: 0;
+  height: 0;
+  border-top: 3.4rem solid var(--project-colour, var(--pink));
+  border-right: 2.8rem solid transparent;
+}
+
+.fiche__quote p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 3.2rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.45;
+  text-align: justify;
+}
+
+.fiche__mark {
+  display: block;
+  color: var(--project-on, var(--white));
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 9.2rem;
+  font-weight: 700;
+  line-height: 0.55;
+}
+
+.fiche__mark--close {
+  margin-left: auto;
+  text-align: right;
+}
+
+.fiche__fields {
+  display: grid;
+  grid-area: fields;
+  grid-template-columns: 54.6% 45.4%;
+  grid-template-rows: repeat(3, auto);
+  grid-auto-flow: column;
+  gap: 2.8rem 0;
+  margin: 3.2rem 0 0;
+}
+
+.fiche__field {
+  display: grid;
+  grid-template-columns: 11.8rem 1fr;
+  align-items: start;
+}
+
+.fiche__field img {
+  width: 7.6rem;
+  height: auto;
+}
+
+.fiche__field dt {
+  color: var(--orange);
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.fiche__field dd {
+  display: grid;
+  margin: 0.4rem 0 0;
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-size: 3.8rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.fiche__cta {
+  display: inline-flex;
+  gap: 1.4rem;
+  align-items: center;
+  grid-area: cta;
+  justify-self: end;
+  align-self: end;
+  height: 7.3rem;
+  margin-top: 2.4rem;
+  padding: 0 3.4rem;
+  border-radius: 1rem;
+  background: var(--project-colour, var(--pink));
+  color: var(--project-on, var(--white));
+  font-family: var(--font-ui);
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.fiche__cta:hover,
+.fiche__cta:focus-visible {
+  background: var(--eu-blue);
+  color: var(--white);
+}
+
+.fiche__summary {
+  grid-area: summary;
+  margin: 2.4rem 0 0;
+  color: var(--eu-blue);
+  font-family: var(--font-body);
+  font-size: 3rem;
+  font-weight: 400;
+  line-height: 1.68;
+  text-align: justify;
+  text-align-last: left;
+  hyphens: none;
+}
+
+/* --- the vision's principles --------------------------------------------- */
+
+.creed {
+  /* Comp page 3: the type block sits inset inside the 1576 plate, roughly 67 from each side. */
+  position: relative;
+  z-index: 1;
+  padding: 7.8rem 6.7rem 8.4rem;
+  color: var(--white);
+}
+
+.creed__title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.8rem;
+  justify-content: center;
+  margin: 0 0 4.6rem;
+  padding-top: 0.15em;
+  font-family: var(--font-display);
+  font-size: 8.8rem;
+  font-weight: 700;
+  line-height: 1.12;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.creed--pale {
+  color: var(--eu-blue);
+}
+
+.creed--pale .creed__title-accent {
+  color: var(--pink);
+}
+
+.creed--pale .creed__title {
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.creed__title-accent {
+  color: var(--orange);
+}
+
+.creed__lead {
+  margin: 0 0 3.2rem;
+  font-family: var(--font-body);
+  font-size: 2.9rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.creed__lead + .creed__body {
+  font-weight: 700;
+}
+
+.creed__body {
+  margin: 0 0 3.2rem;
+  font-family: var(--font-body);
+  font-size: 2.7rem;
+  font-weight: 500;
+  line-height: 1.55;
+  text-align: justify;
+}
+
+.creed__quote {
+  margin: 1.2rem 0 0;
+  padding: 0;
+  border: 0;
+  color: var(--eu-blue);
+  font-family: var(--font-body);
+  font-size: 2.7rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: justify;
+}
+
+.creed__list {
+  display: grid;
+  gap: 2.2rem;
+  margin: 0.6rem 0 3.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.creed__list li {
+  position: relative;
+  padding-left: 3.4rem;
+  font-family: var(--font-body);
+  font-size: 2.7rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.creed__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+/* --- the sectors chart ---------------------------------------------------- */
+
+.chart {
+  padding: 4.2rem 4.8rem 3.6rem;
+  color: var(--eu-blue);
+}
+
+.chart__head {
+  display: flex;
+  gap: 2.4rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 3.6rem;
+}
+
+.chart__head strong {
+  font-family: var(--font-display);
+  font-size: 9.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.chart__head > span {
+  display: grid;
+  font-family: var(--font-display);
+  font-size: 3.6rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.chart__grid {
+  display: grid;
+  grid-template-columns: 6.4rem 1fr;
+  gap: 0 1.8rem;
+  max-width: 104rem;
+  margin: 0 auto;
+}
+
+/* Ten steps of two up the axis, and the bars measured against the same ten, so the plot
+   and its scale cannot drift apart. */
+.chart__axis {
+  display: grid;
+  grid-template-rows: repeat(10, 6.515rem);
+  align-items: center;
+  justify-items: end;
+  height: 65.15rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform: translateY(-1.7rem);
+}
+
+.chart__axis li:last-child {
+  align-self: end;
+}
+
+.chart__tick {
+  display: grid;
+  place-items: center;
+  min-width: 4.35rem;
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.chart__tick--lit {
+  border-radius: 0.3rem;
+  color: var(--white);
+}
+
+/* One row of a known height, so each column is a definite box for its bar to be a
+   percentage of. Letting the row size itself to its content instead leaves the bars
+   measuring against nothing, and they come out flat. */
+.chart__bars {
+  position: relative;
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  grid-template-rows: 1fr;
+  height: 65.15rem;
+  margin: 0;
+  padding: 0;
+  border-bottom: 0.15rem solid #272425;
+  list-style: none;
+}
+
+/* The comp rules the plot with dotted lines and a solid baseline. Drawn on a layer of its
+   own: masking the list itself for the dashes would take the bars with it. */
+.chart__bars::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #272425 0 0.15rem,
+    transparent 0.15rem 6.515rem
+  );
+  mask-image: repeating-linear-gradient(to right, #000 0 0.5rem, transparent 0.5rem 1.25rem);
+}
+
+.chart__bars li {
+  position: relative;
+}
+
+.chart__bar {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 11.9rem;
+  max-width: 68%;
+  transform: translateX(-50%);
+  transition: height 0.35s ease-out;
+}
+
+.chart__label {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  margin-top: 1.4rem;
+  color: #272425;
+  font-family: var(--font-body);
+  font-size: 2rem;
+  font-weight: 600;
+  transform: translateX(-50%);
+}
+
+.chart__title {
+  margin: 5.8rem 0 0;
+  color: var(--eu-blue);
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive editorial layout
+   The supplied composition is desktop-only. Below 1100px the approved 70%
+   desktop canvas remains untouched, while this page switches to a readable
+   flow instead of proportionally shrinking the 1920px artwork.
+   -------------------------------------------------------------------------- */
+@media (max-width: 1099px) {
+  .page--apropos {
+    --bleed: 0px;
+    --pad-x: var(--gutter);
+    --band-y: 7rem;
+  }
+
+  .page--apropos .disque {
+    display: none;
+  }
+
+  .ap-hero--slider {
+    min-height: 0;
+  }
+
+  .ap-hero__copy {
+    width: 100%;
+    margin: 0;
+    padding: 7rem var(--gutter);
+  }
+
+  .ap-hero {
+    min-height: 0;
+    padding: 7rem var(--gutter);
+    background-position: 42% top;
+  }
+
+  .ap-hero__badge {
+    width: fit-content;
+    max-width: 100%;
+    height: auto;
+    min-height: 5.4rem;
+    padding: 1rem 1.6rem;
+    white-space: normal;
+    font-size: 2.4rem;
+    line-height: 1.35;
+  }
+
+  .ap-hero__title {
+    max-width: 100%;
+    font-size: clamp(3.2rem, 6.5vw, 4.8rem);
+    line-height: 1.2;
+    text-align: left !important;
+    text-align-last: left !important;
+    white-space: normal;
+  }
+
+  .ap-hero__title span {
+    width: 100%;
+    max-width: 100%;
+    text-align: left !important;
+    text-align-last: left !important;
+    text-justify: auto;
+    white-space: normal;
+  }
+
+  .ap-hero__body {
+    max-width: 100%;
+    font-size: 1.8rem;
+    line-height: 1.55;
+    text-align: left !important;
+    text-align-last: left !important;
+  }
+
+  .ap-hero__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .page--apropos .btn {
+    min-height: 5.2rem;
+    height: auto;
+    padding: 1.2rem 2rem;
+    font-size: 1.6rem;
+  }
+
+  .page--apropos .ap-hero__actions .btn {
+    min-height: 5.2rem;
+    font-size: 1.6rem;
+  }
+
+  .ap-why {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'title'
+      'copy'
+      'media';
+    grid-template-rows: auto;
+    gap: 4rem;
+    padding: 7rem var(--gutter);
+  }
+
+  .ap-why__title,
+  .ap-vision__title,
+  .ap-objectifs__title,
+  .ap-comment__title,
+  .ap-projets__title,
+  .ap-territoires__title,
+  .ap-impact__title,
+  .ap-partners__title,
+  .ap-avenir__title {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    margin: 0 0 2.4rem;
+    font-size: clamp(2.8rem, 6.5vw, 4.4rem);
+    line-height: 1.12;
+    white-space: normal !important;
+    overflow-wrap: break-word;
+  }
+
+  .ap-why__copy,
+  .ap-vision__copy,
+  .ap-territoires__copy,
+  .ap-impact__body,
+  .ap-partners__body,
+  .ap-avenir__body {
+    width: auto;
+    max-width: 100%;
+    font-size: 1.7rem;
+    line-height: 1.55;
+    text-align: left !important;
+    text-align-last: left !important;
+    hyphens: none;
+    word-spacing: normal;
+  }
+
+  .ap-vision__copy,
+  .ap-vision__lead,
+  .ap-vision__body {
+    width: 100%;
+    max-width: 100%;
+    font-size: 1.7rem;
+    line-height: 1.55;
+    text-align: left !important;
+    text-align-last: left !important;
+    hyphens: none;
+  }
+
+  .ap-vision__copy {
+    gap: 4rem;
+  }
+
+  .ap-why__more {
+    justify-self: end;
+    margin-top: 2rem;
+  }
+
+  .ap-vision__copy > .readmore__toggle {
+    justify-self: end;
+    margin-top: 2rem;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .ap-why__media {
+    width: min(100%, 58rem);
+    justify-self: center;
+  }
+
+  .carousel__bar {
+    gap: 1rem;
+    max-width: 100%;
+  }
+
+  .carousel__arrow {
+    flex: 0 0 3rem;
+    width: 3rem;
+  }
+
+  .carousel__rules {
+    flex: 1;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .carousel__rule {
+    flex: 1;
+    width: auto;
+    min-width: 1.6rem;
+  }
+
+  .ap-vision {
+    height: auto;
+    min-height: 0;
+    padding: 7rem var(--gutter);
+    background-size: auto 100%;
+  }
+
+  .ap-vision__title span + span {
+    margin-left: 0;
+  }
+
+  .ap-vision__list {
+    max-width: 100%;
+    margin-left: 0;
+    font-size: 1.7rem;
+    line-height: 1.45;
+    text-align: left;
+  }
+
+  .readmore__toggle {
+    font-size: 1.7rem;
+  }
+
+  .ap-objectifs {
+    padding: 7rem var(--gutter);
+  }
+
+  .ap-objectifs__title {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .ap-objectifs__title img {
+    width: 9rem;
+    height: auto;
+    margin: 0;
+  }
+
+  .disclosure,
+  .disclosure__row,
+  .disclosure__head,
+  .disclosure__panel,
+  .ap-objectifs .disclosure__row,
+  .ap-avenir .disclosure__row {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+  }
+
+  .disclosure__head {
+    min-height: 0;
+    padding: 2.4rem;
+    border-left-width: 1rem;
+    gap: 1.6rem;
+  }
+
+  .disclosure__titles {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .disclosure__kicker,
+  .disclosure__kicker .disclosure__lead {
+    font-size: 1.55rem;
+  }
+
+  .disclosure__title,
+  .disclosure--objectifs .disclosure__row:first-child .disclosure__title,
+  .ap-avenir .disclosure__title,
+  .ap-avenir .disclosure__row--open .disclosure__title {
+    font-size: clamp(1.9rem, 5vw, 2.4rem) !important;
+    line-height: 1.2;
+    white-space: normal !important;
+    overflow-wrap: break-word;
+  }
+
+  .ap-objectifs .disclosure__panel {
+    line-height: 1.62;
+    gap: 3.2rem;
+  }
+
+  .disclosure__panel {
+    gap: 2rem;
+    padding: 2.4rem;
+    font-size: 1.65rem;
+    line-height: 1.5;
+    text-align: left !important;
+    text-align-last: left !important;
+  }
+
+  .ap-avenir .disclosure__panel {
+    font-size: 1.65rem;
+    line-height: 1.55;
+    text-align: left !important;
+    text-align-last: left !important;
+  }
+
+  .ap-avenir .disclosure__panel p {
+    line-height: 1.65;
+  }
+
+  .ap-comment {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    padding: 7rem var(--gutter);
+  }
+
+  .axes,
+  .axes__tabs,
+  .axes__panel {
+    grid-column: 1;
+    width: 100%;
+  }
+
+  .axes__tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    overflow: visible;
+  }
+
+  .axes__tab {
+    width: 100%;
+    min-width: 0;
+    min-height: 7.2rem;
+    padding: 1.2rem;
+  }
+
+  .axes__icon {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .axes__panel {
+    min-height: 0;
+    padding: 3.2rem 2.4rem;
+  }
+
+  .axes__kicker {
+    font-size: 1.55rem;
+  }
+
+  .axes__title {
+    font-size: clamp(2.2rem, 5.5vw, 2.8rem);
+    line-height: 1.1;
+  }
+
+  .axes__body {
+    font-size: 1.65rem;
+    line-height: 1.45;
+    text-align: left;
+  }
+
+  .ap-projets {
+    height: auto;
+    min-height: 0;
+    padding: 5.6rem var(--gutter) 6.4rem;
+  }
+
+  .ap-projets__body {
+    width: auto;
+    max-width: 100%;
+    font-size: 1.65rem;
+    line-height: 1.45;
+    text-align: left;
+  }
+
+  .ap-projets__subtitle {
+    max-width: 100%;
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+
+  .ap-projets__logos {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    height: auto;
+    margin: 4rem 0 0;
+  }
+
+  .ap-projets__logos > li {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: auto !important;
+  }
+
+  .ap-logo {
+    position: relative;
+    inset: auto !important;
+    width: 100% !important;
+    max-width: 100%;
+    min-height: 8rem;
+    height: auto;
+  }
+
+  .ap-logo img {
+    max-width: 80%;
+    max-height: 10rem;
+  }
+
+  .ap-territoires {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'main'
+      'map';
+    grid-template-rows: auto;
+    height: auto;
+    min-height: 0;
+    gap: 4rem;
+    padding: 7rem var(--gutter);
+  }
+
+  .ap-territoires__main {
+    grid-area: main;
+  }
+
+  .ap-territoires__title {
+    max-width: 100%;
+  }
+
+  .ap-map {
+    display: grid;
+    grid-area: map;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      'legend'
+      'picks'
+      'plate'
+      'readout';
+    gap: 3rem;
+    width: 100%;
+    max-width: 100%;
+    height: auto !important;
+    margin-top: 0;
+    padding: 3rem 2.4rem 3.2rem;
+    overflow: hidden;
+  }
+
+  .ap-map__legend,
+  .ap-map__picks,
+  .ap-map__readout {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    inset: auto;
+    width: 100% !important;
+    max-width: 100%;
+    height: auto !important;
+    transform: none;
+  }
+
+  /* Keep the plate positioned so governorate names stay on the shapes. */
+  .ap-map__plate {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: min(100%, 56rem);
+    height: auto;
+    min-height: 0;
+    aspect-ratio: auto;
+    justify-self: center;
+  }
+
+  .ap-map__fit {
+    width: 100%;
+    max-height: none;
+  }
+
+  .ap-map__svg {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ap-map__label {
+    display: block;
+    font-size: max(12px, clamp(1.35rem, 3.2vw, 1.65rem));
+  }
+
+  .ap-map__label--compact {
+    font-size: max(11px, clamp(1.2rem, 2.8vw, 1.45rem));
+  }
+
+  .ap-map__readout {
+    display: grid;
+    gap: 1.2rem;
+    align-items: start;
+    padding: 0;
+  }
+
+  .ap-map__readout p {
+    overflow: visible;
+    white-space: normal;
+    text-overflow: clip;
+  }
+
+  .ap-map__picks {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-content: start;
+    gap: 1rem;
+  }
+
+  .ap-pick img {
+    height: auto;
+    max-height: 6.4rem;
+  }
+
+  .ap-pick {
+    width: 100%;
+    min-width: 0;
+    border-right: 0;
+    border-bottom: 0.6rem solid transparent;
+    justify-content: center;
+  }
+
+  .ap-pick--on {
+    border-bottom-color: var(--eu-blue);
+  }
+
+  .ap-impact {
+    height: auto;
+    min-height: 0;
+    padding: 5rem var(--gutter);
+  }
+
+  .ap-kpis,
+  .ap-kpis--2,
+  .ap-kpis--3,
+  .ap-kpis--4 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.4rem;
+    width: 100%;
+    margin-top: 2.4rem;
+  }
+
+  .ap-kpi {
+    position: relative;
+    inset: auto !important;
+    width: auto !important;
+    min-height: 0;
+    padding: 2rem 1.6rem;
+    text-align: center !important;
+    text-align-last: center !important;
+  }
+
+  .ap-kpi__value {
+    font-size: clamp(3.2rem, 9vw, 4.4rem);
+  }
+
+  .ap-kpi__label {
+    font-size: 1.55rem;
+    max-width: 100%;
+    text-align: center !important;
+  }
+
+  .ap-kpi__note {
+    font-size: 1.4rem;
+    max-width: 100%;
+    text-align: center !important;
+  }
+
+  .ap-partners {
+    height: auto;
+    min-height: 0;
+    padding: 7rem 0 0;
+  }
+
+  .ap-partners__title,
+  .ap-partners__body {
+    padding-inline: var(--gutter);
+  }
+
+  .ap-partners__switch {
+    width: auto;
+    margin-left: 0;
+    margin-top: 4rem;
+    padding: 4rem var(--gutter) 5rem;
+  }
+
+  .ap-impl {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: none;
+  }
+
+  .ap-eu {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 2.4rem;
+  }
+
+  .ap-eu__flags,
+  .ap-eu__labels {
+    max-width: none;
+  }
+
+  .ap-orgs {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 3rem 0 0;
+  }
+
+  .ap-orgs__plate {
+    display: none;
+  }
+
+  .ap-orgs__marks {
+    display: grid;
+    position: static;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem 2.4rem;
+    padding: 2.8rem 2.4rem;
+    border-radius: 2.4rem;
+    background: var(--white);
+  }
+
+  .ap-tabs {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    width: 100%;
+    margin: 0;
+  }
+
+  .ap-tab {
+    display: grid;
+    justify-items: start;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    padding: 0.4rem 0 0.8rem;
+    font-size: clamp(1.6rem, 3.8vw, 2.2rem);
+    line-height: 1.15;
+    text-align: left;
+  }
+
+  .ap-tab__bar {
+    width: min(100%, 28rem);
+    max-width: 100%;
+    height: 0.8rem;
+    margin-top: 0.8rem;
+  }
+
+  .ap-panel,
+  .ap-panel__body {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .ap-panel__body {
+    padding: 2.4rem;
+    font-size: 1.65rem;
+    line-height: 1.45;
+  }
+
+  .ap-orgs__marks li {
+    position: relative;
+    inset: auto !important;
+    display: grid;
+    place-items: center;
+    width: 100% !important;
+    min-height: 11rem;
+    aspect-ratio: auto;
+    padding: 1.6rem 1.2rem;
+    background: var(--white);
+  }
+
+  .ap-orgs__marks img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 11rem;
+    object-fit: contain;
+  }
+
+  .ap-avenir {
+    height: auto;
+    min-height: 0;
+    z-index: auto;
+    padding: 7rem var(--gutter);
+  }
+
+  .ap-avenir .disclosure {
+    width: 100%;
+    margin-top: 4rem;
+  }
+
+  .ap-avenir__art-slot {
+    position: static;
+    width: min(100%, 56rem);
+    margin: 4rem auto 0;
+  }
+
+  .ap-avenir__art {
+    position: static;
+    width: 100%;
+    margin: 0;
+  }
+
+  .sheet {
+    align-items: start;
+    justify-items: stretch;
+    padding: var(--gutter);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .sheet__card,
+  .sheet__card--pale,
+  .sheet__card--pink,
+  .sheet__card--chart {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 0;
+    margin: 2rem 0;
+    overflow: visible;
+    zoom: 1 !important;
+  }
+
+  .sheet__card--pink::before {
+    right: auto;
+    bottom: -4rem;
+    left: 50%;
+    font-size: clamp(8rem, 22vw, 12rem);
+    letter-spacing: -0.4rem;
+    transform: translateX(-50%);
+  }
+
+  .fiche,
+  .creed,
+  .chart {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .fiche {
+    display: grid;
+    grid-template-areas:
+      'head'
+      'quote'
+      'summary'
+      'fields'
+      'cta';
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    padding: 4rem 2rem 2.8rem;
+    overflow: visible;
+  }
+
+  .fiche::before {
+    bottom: -1.6rem;
+    font-size: clamp(6rem, 18vw, 9rem);
+    letter-spacing: -0.3rem;
+  }
+
+  .fiche__head {
+    padding-right: 0;
+  }
+
+  .fiche__name {
+    font-size: clamp(2.8rem, 9vw, 4rem);
+    overflow-wrap: anywhere;
+  }
+
+  .fiche__tagline {
+    font-size: 1.55rem;
+  }
+
+  .fiche__summary {
+    font-size: 1.65rem;
+    line-height: 1.55;
+    text-align: left;
+    text-align-last: left;
+  }
+
+  .fiche__quote {
+    margin-top: 2rem;
+    padding: 2rem 2.2rem 2.4rem;
+  }
+
+  .fiche__quote p {
+    font-size: 1.55rem;
+    text-align: left;
+  }
+
+  .fiche__mark {
+    font-size: clamp(3.2rem, 10vw, 4.4rem);
+  }
+
+  .fiche__fields {
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    gap: 2rem;
+  }
+
+  .fiche__field {
+    grid-template-columns: 5.2rem minmax(0, 1fr);
+  }
+
+  .fiche__field img {
+    width: 4.4rem;
+  }
+
+  .fiche__field dt {
+    font-size: 1.45rem;
+  }
+
+  .fiche__field dd {
+    font-size: 1.65rem;
+  }
+
+  .fiche__cta {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    min-height: 5.2rem;
+    justify-self: stretch;
+    padding: 1.2rem 1.6rem;
+    font-size: 1.55rem;
+    line-height: 1.2;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .creed {
+    padding: 4rem 2rem 3.2rem;
+  }
+
+  .creed__title {
+    font-size: clamp(2.6rem, 8vw, 3.6rem);
+  }
+
+  .creed__lead,
+  .creed__body,
+  .creed__quote,
+  .creed__list li {
+    font-size: 1.65rem;
+    text-align: left;
+  }
+
+  .chart {
+    padding: 4rem 1.6rem 2.8rem;
+  }
+
+  .chart__head {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1.2rem 2rem;
+  }
+
+  .chart__head strong {
+    font-size: clamp(3.2rem, 12vw, 4.8rem);
+  }
+
+  .chart__head > span {
+    font-size: 1.55rem;
+  }
+
+  .chart__grid {
+    grid-template-columns: 4.8rem minmax(0, 1fr);
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .chart__axis,
+  .chart__bars {
+    height: 48rem;
+  }
+
+  .chart__axis {
+    grid-template-rows: repeat(10, 4.8rem);
+    transform: translateY(-1.2rem);
+  }
+
+  .chart__bars::before {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      #272425 0 0.15rem,
+      transparent 0.15rem 4.8rem
+    );
+  }
+
+  .chart__tick {
+    min-width: 0;
+    padding: 0.2rem 0.4rem;
+    font-size: 1.8rem;
+  }
+
+  .chart__bar {
+    width: 70%;
+    max-width: 8rem;
+  }
+
+  .chart__label {
+    font-size: 1.6rem;
+  }
+
+  .chart__title {
+    margin-top: 4.8rem;
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 599px) {
+  .ap-hero__copy,
+  .ap-hero {
+    padding: 4.8rem var(--gutter);
+  }
+
+  .ap-hero__title {
+    font-size: clamp(2.4rem, 7vw, 3.1rem);
+  }
+
+  .ap-hero__badge {
+    font-size: 1.5rem;
+    min-height: 0;
+    padding: 0.8rem 1.4rem;
+  }
+
+  .ap-hero__body {
+    font-size: 1.6rem;
+  }
+
+  .ap-hero__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .page--apropos .btn {
+    width: 100%;
+  }
+
+  .ap-why__title,
+  .ap-vision__title,
+  .ap-objectifs__title,
+  .ap-comment__title,
+  .ap-projets__title,
+  .ap-territoires__title,
+  .ap-impact__title,
+  .ap-partners__title,
+  .ap-avenir__title {
+    font-size: clamp(2.4rem, 7.2vw, 3.2rem);
+  }
+
+  .ap-projets__logos,
+  .ap-map__picks,
+  .ap-orgs__marks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .axes__tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .axes__tab {
+    grid-template-columns: 5.2rem 1fr;
+    min-height: 6.4rem;
+  }
+
+  .ap-kpis,
+  .ap-kpis--2,
+  .ap-kpis--3,
+  .ap-kpis--4 {
+    grid-template-columns: 1fr;
+  }
+
+  .ap-objectifs__title {
+    grid-template-columns: 1fr;
+  }
+
+  .ap-objectifs__title img {
+    width: 6rem;
+  }
+}

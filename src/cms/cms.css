@@ -1,0 +1,806 @@
+body.cms-editing .news__collage-wrap,
+body.cms-editing .cms-editable--image {
+  pointer-events: auto;
+}
+html:has(body.cms-editing) {
+  overflow-y: scroll;
+  height: 100%;
+}
+body.cms-editing {
+  overflow-y: auto;
+  min-height: 100%;
+}
+body.cms-editing .page {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+body.cms-editing .page--publications,
+body.cms-editing .page--news,
+body.cms-editing .page--stories,
+body.cms-editing .page--opportunities,
+body.cms-editing .page--media,
+body.cms-editing .page--carte,
+body.cms-editing .page--agenda {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+.cms-editable {
+  cursor: pointer;
+  outline: none;
+  outline-offset: 0;
+}
+/* Beat page rules like `.hero__title { position: static }` so pencils stay inset.
+   Do not override full-bleed / absolute image shells (hero carousel, etc.). */
+body.cms-editing .cms-editable:not(.cms-editable--image) {
+  position: relative;
+}
+body.cms-editing .cms-editable--image.is-movable {
+  position: absolute;
+}
+body.cms-editing .hero-carousel__slide .cms-editable {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.cms-editable:hover,
+.cms-editable.is-on {
+  outline: 2px dashed rgba(242, 168, 73, 0.95);
+  outline-offset: 4px;
+  background: rgba(242, 168, 73, 0.06);
+}
+.cms-editable__media {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  display: block;
+  object-fit: inherit;
+}
+.cms-pencil {
+  position: absolute;
+  z-index: 50;
+  top: 2px;
+  right: -28px;
+  transform: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 99px;
+  background: #f2a849;
+  color: #081b2e;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(8, 27, 46, 0.22);
+  pointer-events: auto;
+  opacity: 0.9;
+  user-select: none;
+  transition: transform 0.12s, background 0.12s, opacity 0.12s;
+}
+/* Beat page rules like `.hero__badge span { position: static }` that also match the pencil. */
+body.cms-editing span.cms-pencil {
+  position: absolute;
+  display: grid;
+  color: #081b2e;
+  font-size: inherit;
+  line-height: 1;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+}
+/* Titles / badges hug content so the pencil sits beside the words, not at the column edge. */
+body.cms-editing h1.cms-editable--text,
+body.cms-editing h2.cms-editable--text,
+body.cms-editing h3.cms-editable--text,
+body.cms-editing .cms-editable--text[class*='eyebrow'],
+body.cms-editing .cms-editable--text[class*='badge'] {
+  width: fit-content;
+  max-width: 100%;
+}
+.cms-pencil svg { width: 10px; height: 10px; }
+.cms-editable:hover .cms-pencil,
+.cms-editable.is-on .cms-pencil { opacity: 1; }
+.cms-pencil:hover {
+  background: #fff;
+  transform: scale(1.08);
+  opacity: 1;
+}
+.cms-popup__hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #5c6b7a;
+}
+.cms-editable.is-movable { cursor: move; }
+body.cms-editing a.btn,
+body.cms-editing a.hero__btn,
+body.cms-editing a.map__btn,
+body.cms-editing a.stories__btn,
+body.cms-editing a.pubs__btn,
+body.cms-editing a.stream__cta,
+body.cms-editing a.card__btn,
+body.cms-editing .news__form > button,
+body.cms-editing .btn {
+  position: relative;
+  overflow: visible;
+}
+a.cms-editable,
+button.cms-editable,
+.btn .cms-editable,
+a .cms-editable,
+button .cms-editable,
+.stream__cta .cms-editable,
+.card__btn .cms-editable {
+  outline: none;
+  position: relative;
+  display: inline;
+}
+.btn .cms-editable--text,
+a.btn .cms-editable--text,
+.hero__btn .cms-editable--text {
+  display: contents;
+}
+.hero__btn-label.cms-editable {
+  display: contents;
+}
+.btn .cms-pencil,
+a .cms-pencil,
+button .cms-pencil,
+.stream__cta .cms-pencil,
+.card__btn .cms-pencil,
+.hero__btn .cms-pencil {
+  top: 4px;
+  right: 4px;
+}
+/* Newsletter field pencils sit on the control, not as floating docks */
+.news__field-edit {
+  position: relative;
+  display: contents;
+}
+body.cms-editing .news__field-edit {
+  display: inline-grid;
+  position: relative;
+}
+.news__field-pencil {
+  position: absolute !important;
+  top: 6px;
+  right: 6px;
+  z-index: 5;
+}
+.cms-chip-only {
+  position: absolute;
+  z-index: 40;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+/* Title-row chips sit beside the heading — never float at design rem coords */
+.home-btn-edit > .cms-chip-only,
+[class*='-title-row'] > .cms-chip-only,
+.ap-title-row > .cms-chip-only,
+.ps-title-row > .cms-chip-only,
+.news-btn-edit > .cms-chip-only,
+.op-btn-edit > .cms-chip-only,
+.agenda-btn-edit > .cms-chip-only,
+.pub-btn-edit > .cms-chip-only,
+.gloss-btn-edit > .cms-chip-only,
+.search-btn-edit > .cms-chip-only,
+.fin-hero__figure > .cms-chip-only {
+  position: relative;
+  display: inline-grid;
+  top: auto;
+  right: auto;
+  left: auto;
+  width: 22px;
+  height: 22px;
+  pointer-events: auto;
+  vertical-align: middle;
+}
+.cms-chip-only .cms-pencil {
+  position: static;
+  top: auto;
+  right: auto;
+  pointer-events: auto;
+}
+.contact-cms-bar .cms-chip-only,
+.contact-cms-bar .cms-list-trigger-wrap {
+  position: static;
+  top: auto;
+  right: auto;
+}
+.map__cta-dock {
+  left: 49.2rem;
+  top: 84.2rem;
+}
+.stream__heading-dock {
+  top: auto;
+}
+.stream__cta-dock {
+  z-index: 8;
+}
+.stories__cta-dock {
+  left: 131rem;
+  top: 83.2rem;
+}
+.pubs__cta-dock {
+  left: 60.5rem;
+  top: 84rem;
+}
+body.cms-editing .map__art,
+body.cms-editing .stories__portrait,
+body.cms-editing .stories__graffiti,
+body.cms-editing .pubs__books {
+  pointer-events: auto;
+}
+.cms-editable--image:not(.is-movable) {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+/* Page-placed artwork (map, band photos): wrapper carries layout, not a 0-width inline box. */
+body.cms-editing .cms-editable--image.map__art,
+body.cms-editing .cms-editable--image.band__art,
+body.cms-editing .cms-editable--image.stories__portrait,
+body.cms-editing .cms-editable--image.stories__graffiti,
+body.cms-editing .cms-editable--image.pubs__books {
+  position: absolute;
+  display: block;
+  max-width: none;
+}
+body.cms-editing .cms-editable--image.map__art > .cms-editable__media,
+body.cms-editing .cms-editable--image.band__art > .cms-editable__media,
+body.cms-editing .cms-editable--image.stories__portrait > .cms-editable__media,
+body.cms-editing .cms-editable--image.stories__graffiti > .cms-editable__media,
+body.cms-editing .cms-editable--image.pubs__books > .cms-editable__media {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: inherit;
+}
+/* Hero full-bleed: keep photo pencil above the carousel dots, not under the nav */
+.hero-carousel__slide .cms-image-chip {
+  top: auto !important;
+  bottom: 6.4rem;
+  right: 1.6rem;
+  z-index: 6;
+}
+.hero-carousel__slide:not(.is-active) .cms-image-chip {
+  display: none;
+}
+.hero-carousel__edit-hint {
+  position: absolute;
+  z-index: 5;
+  left: 16rem;
+  bottom: 6.4rem;
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  max-width: min(42rem, calc(100% - 12rem));
+  border-radius: 0.4rem;
+  background: rgba(8, 27, 46, 0.72);
+  color: #fff;
+  font: 600 1.1rem/1.35 Poppins, sans-serif;
+  pointer-events: none;
+}
+/* Keep badge hug content — never stretch to the copy column width. */
+.hero__badge.cms-editable {
+  width: max-content;
+  max-width: none;
+  display: inline-block;
+  white-space: nowrap;
+}
+.hero__title.cms-editable,
+.hero__body.cms-editable {
+  max-width: 100%;
+}
+/* Sit pencils just outside the text so they don't cover letters */
+body.cms-editing .hero__copy {
+  overflow: visible;
+}
+.hero__title.cms-editable > .cms-pencil {
+  top: 50%;
+  right: -28px;
+  transform: translateY(-50%);
+}
+.hero__badge.cms-editable > .cms-pencil,
+.hero__body.cms-editable > .cms-pencil {
+  top: 2px;
+  right: -28px;
+}
+.hero__btn .cms-pencil {
+  top: -0.9rem;
+  right: -0.9rem;
+}
+.chiffres__period .cms-editable > .cms-pencil {
+  top: 2px;
+  right: -28px;
+}
+.chiffres__title.cms-editable > .cms-pencil {
+  top: 4px;
+  right: 12px;
+}
+body.cms-editing .band--chiffres {
+  overflow: visible;
+}
+body.cms-editing .hero__btn:has(.cms-editable):hover,
+body.cms-editing .hero__btn:has(.is-on) {
+  outline: 1px dashed rgba(242, 168, 73, 0.9);
+  outline-offset: 2px;
+}
+.cms-editable--image:not(.is-movable) > img {
+  display: block;
+  max-width: 100%;
+}
+.cms-editable--image.stories__portrait .cms-editable__media,
+.cms-editable--image.stories__graffiti .cms-editable__media,
+.cms-editable--image.pubs__books .cms-editable__media {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+}
+[data-cms-section].cms-section-highlight {
+  outline: 3px solid #f2a849;
+  outline-offset: 8px;
+  transition: outline-color 0.3s;
+}
+.cms-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(8, 27, 46, 0.55);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  backdrop-filter: blur(2px);
+}
+.cms-popup {
+  position: relative;
+  z-index: 501;
+  width: min(480px, calc(100vw - 32px));
+  max-height: min(80vh, 560px);
+  overflow: auto;
+  background: #fff;
+  color: #081b2e;
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 24px 60px rgba(8, 27, 46, 0.28);
+  padding: 20px 22px;
+  font-family: Barlow, sans-serif;
+}
+.cms-popup h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cms-popup textarea,
+.cms-popup input {
+  width: 100%;
+  min-height: 40px;
+  font: 14px/1.45 Poppins, sans-serif;
+  padding: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+.cms-popup textarea { min-height: 96px; }
+.cms-popup__file {
+  display: block;
+  margin-top: 8px;
+  padding: 10px;
+  border: 1.5px dashed #ccc;
+  text-align: center;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.cms-popup__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+.cms-popup button {
+  font: 700 12px/1 Barlow, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border: 0;
+  cursor: pointer;
+}
+.cms-popup__ok {
+  background: #074ea2;
+  color: #fff;
+}
+.cms-popup__cancel {
+  background: #f2f2f2;
+}
+.cms-toolbar {
+  position: fixed;
+  z-index: 70;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #081b2e;
+  color: #fff;
+  font-family: Barlow, sans-serif;
+}
+.cms-toolbar--embed {
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+}
+.cms-toolbar--slim {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  bottom: 10px;
+  width: min(720px, calc(100% - 24px));
+  justify-content: space-between;
+  padding: 8px 12px 8px 16px;
+  border-radius: 99px;
+  background: rgba(8, 27, 46, 0.92);
+  backdrop-filter: blur(8px);
+}
+.cms-toolbar--iframe .cms-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.cms-toolbar--iframe .cms-toolbar__save {
+  background: #f2a849;
+  color: #081b2e;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: 0;
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.cms-toolbar--iframe .cms-toolbar__save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.cms-toolbar__hint {
+  font-size: 12px;
+  color: #d5e0ee;
+  text-align: center;
+  line-height: 1.4;
+}
+body.cms-editing:has(.cms-toolbar--slim) {
+  padding-bottom: 52px;
+}
+.cms-toolbar--dirty {
+  box-shadow: 0 8px 32px rgba(8, 27, 46, 0.35), 0 0 0 2px rgba(242, 168, 73, 0.5);
+}
+.cms-toolbar--slim.cms-toolbar--dirty {
+  box-shadow: 0 8px 32px rgba(8, 27, 46, 0.35), 0 0 0 2px rgba(242, 168, 73, 0.65);
+}
+.cms-toolbar--iframe .cms-toolbar__actions button {
+  min-height: 36px;
+}
+.cms-toolbar strong {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cms-toolbar__langs,
+.cms-toolbar__actions {
+  display: flex;
+  gap: 6px;
+}
+.cms-toolbar button {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: transparent;
+  color: #fff;
+  padding: 8px 12px;
+  cursor: pointer;
+  font: 700 12px/1 Barlow, sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.cms-toolbar button.active,
+.cms-toolbar__save {
+  background: #f2a849 !important;
+  color: #081b2e !important;
+  border-color: #f2a849 !important;
+}
+.cms-count {
+  font-size: 12px;
+  color: #f2a849;
+}
+.cms-break {
+  white-space: pre-line;
+}
+.cookie-banner {
+  position: fixed;
+  z-index: 60;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 16px 40px rgba(8, 27, 46, 0.16);
+  font-family: Poppins, sans-serif;
+}
+body.cms-editing .cookie-banner { bottom: 64px; }
+.cookie-banner p a {
+  color: #074ea2;
+  font-weight: 700;
+}
+.cookie-banner p { margin: 0; max-width: 62ch; font-size: 14px; line-height: 1.45; }
+.cookie-banner div { display: flex; gap: 8px; flex: none; }
+.cookie-banner button {
+  font: 700 12px/1 Barlow, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border: 0;
+  cursor: pointer;
+}
+.cookie-banner__ok { background: #074ea2; color: #fff; }
+.cookie-banner__reject { background: #f2f2f2; color: #081b2e; }
+.nav__lang-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  color: #081b2e;
+  min-width: 140px;
+  border: 1px solid #ccc;
+  z-index: 30;
+  box-shadow: 0 12px 28px rgba(8, 27, 46, 0.12);
+}
+.nav__lang-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 10px 12px;
+  cursor: pointer;
+  font: 700 12px/1 Barlow, sans-serif;
+  letter-spacing: 0.06em;
+}
+.nav__lang-menu button:hover,
+.nav__lang-menu button.is-on { background: #eef4fb; color: #074ea2; }
+.nav__utils-lang { position: relative; }
+
+@media (max-width: 599px) {
+  .cookie-banner {
+    flex-direction: column;
+    align-items: stretch;
+    left: max(12px, env(safe-area-inset-left, 0px));
+    right: max(12px, env(safe-area-inset-right, 0px));
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .cookie-banner p {
+    max-width: none;
+    font-size: 13px;
+  }
+
+  .cookie-banner div {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .cookie-banner button {
+    width: 100%;
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+}
+
+.cms-image-chip {
+  position: absolute;
+  z-index: 40;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  pointer-events: auto;
+}
+.cms-image-chip .cms-pencil {
+  position: static;
+  transform: none;
+  opacity: 1;
+  width: 28px;
+  height: 28px;
+}
+.cms-image-chip--collage {
+  top: 18%;
+  right: 14%;
+}
+.band--map > .cms-image-chip {
+  top: 28%;
+  right: 16%;
+}
+.band--map .cms-editable--image > .cms-image-chip {
+  top: 12%;
+  right: 8%;
+}
+.band--projets .cms-json-list { display: contents; }
+.band--projets .cms-list-trigger-wrap {
+  top: 4rem;
+  right: 4rem;
+}
+.band--chiffres .cms-list-trigger-wrap {
+  top: -8rem;
+  right: 0;
+  left: auto;
+}
+
+.cms-list-trigger-wrap {
+  position: absolute;
+  z-index: 30;
+  top: 1.6rem;
+  right: 2.4rem;
+}
+.band--streams .cms-json-list { display: contents; }
+.band--streams .cms-list-trigger-wrap {
+  top: 8rem;
+  right: auto;
+  left: 2.4rem;
+  z-index: 12;
+}
+.cms-list-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 999px;
+  background: #f2a849;
+  color: #081b2e;
+  font: 700 11px/1 Barlow, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.cms-list-trigger__count {
+  background: #081b2e;
+  color: #fff;
+  border-radius: 99px;
+  padding: 2px 7px;
+}
+.cms-list-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: rgba(8, 27, 46, 0.45);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.cms-list-panel {
+  width: min(760px, 100%);
+  max-height: min(80vh, 720px);
+  overflow: auto;
+  background: #fff;
+  color: #081b2e;
+  padding: 20px;
+  box-shadow: 0 24px 60px rgba(8, 27, 46, 0.25);
+}
+.cms-list-panel__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.cms-list-panel__head button {
+  border: 0;
+  background: none;
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+}
+.cms-list-panel__hint { font-size: 13px; color: #5c6b7a; }
+.cms-list-panel__card {
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin: 12px 0;
+}
+.cms-list-panel__card-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font: 700 12px/1 Barlow, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.cms-list-panel__field { display: grid; gap: 4px; margin: 8px 0; font-size: 12px; }
+.cms-list-toggles {
+  border: 0;
+  padding: 0;
+  min-inline-size: 0;
+}
+.cms-list-toggles legend {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.cms-list-toggles legend em {
+  font-style: normal;
+  font-weight: 500;
+  color: #5c6b7a;
+}
+.cms-list-toggles__hint {
+  margin: 0;
+  color: #5c6b7a;
+  line-height: 1.35;
+}
+.cms-list-toggles__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cms-list-toggle {
+  border: 1px solid #c5d0da;
+  background: #fff;
+  color: #081b2e;
+  padding: 7px 10px;
+  font: 600 12px/1.1 Poppins, sans-serif;
+  cursor: pointer;
+}
+.cms-list-toggle.is-on,
+.cms-list-toggle[aria-pressed='true'] {
+  border-color: #f2a849;
+  background: #f2a849;
+  color: #081b2e;
+}
+.cms-list-panel__field input,
+.cms-list-panel__field textarea {
+  width: 100%;
+  font: 14px/1.4 Poppins, sans-serif;
+  padding: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+.cms-list-panel__field--image {
+  gap: 8px;
+}
+.cms-list-panel__thumb {
+  width: 100%;
+  max-height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.cms-list-panel__upload {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #f0f4f8;
+  color: #1a3a5c;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cms-list-panel__add,
+.cms-list-panel__done {
+  margin-top: 8px;
+  margin-right: 8px;
+  border: 0;
+  padding: 10px 14px;
+  font: 700 12px/1 Barlow, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: #f2a849;
+  color: #081b2e;
+}

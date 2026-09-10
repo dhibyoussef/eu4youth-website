@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="200" viewBox="0 0 420 200" fill="none">
+  <circle cx="28" cy="28" r="7" fill="#1e88e5"/>
+  <circle cx="52" cy="28" r="7" fill="#e34171"/>
+  <circle cx="76" cy="28" r="7" fill="#f2a849"/>
+  <circle cx="100" cy="28" r="7" fill="#58ac48"/>
+  <text x="24" y="72" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#23b5e5" letter-spacing="1">GO4YOUTH</text>
+  <text x="24" y="118" font-family="Georgia, 'Times New Roman', serif" font-size="40" font-weight="700" fill="#111111">Chercheurs</text>
+  <circle cx="340" cy="100" r="52" fill="#23b5e5"/>
+  <text x="340" y="112" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="800" fill="#ffffff">EMP</text>
+  <text x="24" y="168" font-family="Georgia, 'Times New Roman', serif" font-size="15" font-weight="600" fill="#222222" letter-spacing="1.2">D'EMPLOI</text>
+</svg>

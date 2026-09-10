@@ -1,0 +1,265 @@
+.page--legal-pending {
+  --bleed: 0px;
+  --pad-x: 16rem;
+  background: var(--white);
+  overflow-x: clip;
+  padding-bottom: clamp(5rem, 6vw, 8rem);
+}
+
+.legal-hero {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  padding: 8rem var(--pad-x) 6rem;
+  overflow: hidden;
+  color: var(--white);
+  background: var(--eu-blue);
+}
+
+.legal-title-row,
+.legal-btn-edit {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.legal-edit-region {
+  grid-column: 1 / -1;
+}
+
+.legal-list-cms {
+  display: contents;
+}
+
+.page--legal-pending .legal-pencil.cms-chip-only,
+.page--legal-pending .legal-title-row .cms-chip-only,
+.page--legal-pending .legal-btn-edit .cms-chip-only,
+.page--legal-pending .legal-toc-nav-edit .cms-chip-only {
+  position: static;
+  display: inline-grid;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+}
+
+.legal-hero > p {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 2rem;
+  color: var(--orange);
+  font: 700 2.1rem var(--font-ui);
+  letter-spacing: 0.07em;
+}
+
+.legal-hero h1 {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  font-size: clamp(6.4rem, 7.5vw, 11rem);
+  letter-spacing: -0.08rem;
+  line-height: 1.12;
+}
+
+.legal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 6rem var(--pad-x) 8rem;
+  background: var(--white);
+}
+
+.legal-document__intro {
+  padding: 9rem var(--pad-x) 8rem;
+}
+
+.legal-document__intro > p:first-child,
+.legal-document__toc > p {
+  margin-bottom: 1.5rem;
+  color: var(--orange);
+  font: 700 2rem var(--font-ui);
+  letter-spacing: 0.06em;
+}
+
+.legal-document__intro h2 {
+  max-width: 115rem;
+  color: var(--eu-blue);
+  font-size: 6.5rem;
+  line-height: 1.12;
+}
+
+.legal-document__intro h2 + p {
+  max-width: 105rem;
+  margin-top: 2.8rem;
+  color: #354251;
+  font-size: 3rem;
+  line-height: 1.55;
+}
+
+.legal-document__layout {
+  display: grid;
+  grid-template-columns: 38rem minmax(0, 1fr);
+  gap: 8rem;
+  padding: 8rem var(--pad-x) 10rem;
+  background: #f1f3f5;
+}
+
+.legal-document__toc {
+  position: sticky;
+  top: 3rem;
+  align-self: start;
+}
+
+.legal-document__toc ol {
+  border-top: 0.2rem solid var(--grey-rule);
+}
+
+.legal-document__toc li {
+  border-bottom: 0.2rem solid var(--grey-rule);
+}
+
+.legal-document__toc a {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.8rem 0;
+  color: var(--eu-blue);
+  font: 700 2.6rem/1.35 var(--font-ui);
+}
+
+.legal-document__toc a:hover,
+.legal-document__toc a:focus-visible {
+  color: var(--orange-text);
+}
+
+.legal-document__toc a span {
+  color: var(--orange);
+}
+
+.legal-document__body {
+  display: grid;
+  gap: 2.4rem;
+}
+
+.legal-document__body > section {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 2rem;
+  padding: 4rem;
+  scroll-margin-top: 3rem;
+  border: 0.2rem solid var(--grey-rule);
+  background: var(--white);
+  box-shadow: 0 0.6rem 2.2rem rgb(0 0 0 / 9%);
+}
+
+.legal-document__body > section > span {
+  color: #cfd7df;
+  font: 700 3.6rem/1 var(--font-display);
+}
+
+.legal-document__body h2 {
+  color: var(--eu-blue);
+  font-size: 4.6rem;
+  line-height: 1.15;
+}
+
+.legal-document__slot {
+  margin-top: 2.5rem;
+  padding: 2.5rem 3rem;
+  border-left: 0.6rem solid var(--orange);
+  background: #f7f8fa;
+}
+
+.legal-document__slot p {
+  color: var(--orange-text);
+  font: 700 2.8rem/1.45 var(--font-ui);
+  letter-spacing: 0.04em;
+}
+
+.legal-document__slot span {
+  display: block;
+  margin-top: 0.8rem;
+  color: #596575;
+  font-size: 3rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 1099px) {
+  .page--legal-pending {
+    --bleed: 0px;
+    --pad-x: var(--gutter);
+  }
+
+  .legal-hero h1 {
+    font-size: clamp(3.6rem, 6vw, 5.2rem);
+    letter-spacing: -0.08rem;
+    line-height: 1.08;
+  }
+
+  .legal-document__layout {
+    grid-template-columns: 1fr;
+    gap: 5rem;
+  }
+
+  .legal-document__toc {
+    position: static;
+  }
+}
+
+@media (max-width: 599px) {
+  .page--legal-pending {
+    --pad-x: var(--gutter);
+  }
+
+  .legal-hero {
+    min-height: 0;
+    padding-top: 6rem;
+  }
+
+  .legal-hero > p {
+    max-width: none;
+    font-size: 1.65rem;
+    line-height: 1.45;
+  }
+
+  .legal-hero h1 {
+    font-size: clamp(2.8rem, 8vw, 3.6rem);
+    letter-spacing: -0.08rem;
+  }
+
+  .legal-document__intro h2 {
+    font-size: clamp(2.4rem, 7vw, 3.2rem);
+  }
+
+  .legal-document__intro h2 + p,
+  .legal-document__slot span {
+    font-size: 1.65rem;
+    line-height: 1.55;
+  }
+
+  .legal-document__body > section {
+    grid-template-columns: 1fr;
+    padding: 2.4rem;
+  }
+
+  .legal-document__body h2 {
+    font-size: clamp(2rem, 5.5vw, 2.6rem);
+  }
+
+  .legal-document__slot p {
+    font-size: 1.55rem;
+  }
+}
+
+/* .btn carries a variant's colour and type but not its size: the comp-positioned
+   buttons are each given the plate the PDF prints them on. This page is assembled
+   outside those states, so it states the size itself — without it the border was
+   drawn tight around the letters, with no room between the label and the edge. */
+.page--legal-pending .btn:not(.cms-pencil) {
+  min-height: 6rem;
+  padding-inline: 2.6rem;
+}

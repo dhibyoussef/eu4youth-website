@@ -1,0 +1,784 @@
+/* Gutters, band height and grid pitch are measured off
+   « Page Publications & Ressources.pdf » (content column 134→1786 of 1920). */
+.page--publications {
+  --bleed: 0px;
+  --pad-x: 16rem;
+  background: var(--white);
+  overflow-x: clip;
+}
+
+/* Design: teal band carrying the title and chapeau, with the book-stack photo
+   bleeding off the right edge over the full height of the band. */
+.pub-hero {
+  position: relative;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-height: 56rem;
+  color: var(--white);
+  background: var(--teal);
+  overflow: hidden;
+}
+
+.pub-hero::before {
+  position: absolute;
+  left: -4rem;
+  top: 50%;
+  z-index: 0;
+  content: "EU4Y";
+  transform: translateY(-50%);
+  color: rgb(255 255 255 / 7%);
+  /* Decorative 7%-opacity watermark must not become a late web-font LCP. */
+  font: 900 44rem/0.78 "Arial Black", Arial, sans-serif;
+  letter-spacing: -2.5rem;
+  pointer-events: none;
+}
+
+.pub-hero__copy {
+  position: relative;
+  z-index: 2;
+  max-width: min(100rem, 58%);
+  padding: 8rem 6rem 8rem var(--pad-x);
+}
+
+.pub-hero h1 {
+  max-width: 100%;
+  font-size: clamp(6.4rem, 7.5vw, 11rem);
+  letter-spacing: -0.08rem;
+  line-height: 1.12;
+}
+
+.pub-hero p {
+  max-width: 98rem;
+  margin-top: 2.8rem;
+  font-size: 3.5rem;
+  line-height: 1.68;
+  text-align: justify;
+  text-align-last: left;
+}
+
+/* Books sit on the teal — not in a side column that can leave a white seam. */
+.pub-hero__art {
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 0 auto;
+  width: min(58%, 96rem);
+  height: 100%;
+  pointer-events: none;
+  background: transparent;
+}
+
+.pub-hero__art img,
+.pub-hero__art .cms-editable,
+.pub-hero__art .cms-editable__media {
+  position: absolute;
+  display: block;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent !important;
+}
+
+.pub-hero__art img,
+.pub-hero__art .cms-editable img {
+  object-fit: contain;
+  object-position: right bottom;
+  /* Transparent asset on teal — do not multiply (that erased the books). */
+  mix-blend-mode: normal;
+}
+
+.pub-browser {
+  overflow: visible;
+  padding: 6rem var(--pad-x) 14rem;
+}
+
+.pub-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-bottom: 5rem;
+}
+
+.pub-quick button {
+  padding: 1.2rem 2rem;
+  border: 0.2rem solid var(--teal);
+  color: var(--teal);
+  background: var(--white);
+  font: 700 1.9rem var(--font-ui);
+  cursor: pointer;
+}
+
+.pub-quick button:hover,
+.pub-quick button.is-active {
+  color: var(--white);
+  background: var(--teal);
+}
+
+.pub-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 4rem;
+  margin-bottom: 3.2rem;
+}
+
+.pub-search {
+  width: min(78rem, 55%);
+}
+
+.pub-search span {
+  display: block;
+  margin-bottom: 1rem;
+  color: var(--teal-a11y);
+  font: 700 2rem var(--font-ui);
+  text-transform: uppercase;
+}
+
+.pub-search input {
+  width: 100%;
+  min-height: 6.5rem;
+  padding: 1.4rem 2rem;
+  border: 0;
+  border-left: 0.6rem solid var(--teal-a11y);
+  background: var(--grey-field);
+  font: 500 2.2rem var(--font-body);
+}
+
+.pub-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28rem;
+  gap: 1.6rem 2.4rem;
+  align-items: start;
+  margin-bottom: 4rem;
+}
+
+.pub-filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.6rem 2rem;
+}
+
+.pub-filter {
+  position: relative;
+  min-width: 0;
+  background: var(--grey-field);
+  border-left: 0.6rem solid var(--teal);
+}
+
+.pub-filter > button,
+.pub-filter .pub-title-row > button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  width: 100%;
+  min-height: 7.2rem;
+  padding: 1.4rem 1.8rem;
+  border: 0;
+  color: var(--teal-a11y);
+  background: transparent;
+  font: 700 2rem var(--font-ui);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.pub-filter > button:hover,
+.pub-filter.is-open > button,
+.pub-filter .pub-title-row > button:hover,
+.pub-filter.is-open .pub-title-row > button {
+  background: #e8e8e8;
+}
+
+.pub-filter > button span,
+.pub-filter .pub-title-row > button span {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.pub-filter > button small,
+.pub-filter .pub-title-row > button small {
+  overflow: hidden;
+  color: var(--ink);
+  font: 500 1.6rem/1.2 var(--font-body);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pub-filter__chev {
+  width: 1.4rem;
+  height: 0.9rem;
+  flex: none;
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  opacity: 0.55;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.pub-filter.is-open .pub-filter__chev {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.pub-filter__menu {
+  position: absolute;
+  z-index: 6;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  left: -0.6rem;
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 1.2rem 2.8rem rgb(8 27 46 / 16%);
+}
+
+.pub-filter__menu ul {
+  margin: 0;
+  padding: 0.6rem 0;
+  max-height: 32rem;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--white);
+}
+
+.pub-filter__menu button {
+  display: block;
+  width: 100%;
+  padding: 1.1rem 1.8rem;
+  border: 0;
+  color: var(--ink);
+  background: transparent;
+  font: 500 1.8rem var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.pub-filter__menu button.is-active,
+.pub-filter__menu button:hover {
+  color: var(--white);
+  background: var(--teal);
+}
+
+.pub-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem 2.4rem;
+  margin-bottom: 3rem;
+  color: var(--eu-blue);
+  font-size: 2.2rem;
+}
+
+.pub-active {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.pub-active button {
+  padding: 0.8rem 1.2rem;
+  border: 0.1rem solid var(--teal-a11y);
+  color: var(--teal-a11y);
+  background: var(--white);
+  font: 700 1.6rem var(--font-ui);
+  cursor: pointer;
+}
+
+.pub-active button:hover {
+  color: var(--white);
+  background: var(--teal-a11y);
+}
+
+.pub-summary button {
+  border: 0;
+  border-bottom: 0.3rem solid var(--teal-a11y);
+  color: var(--teal-a11y);
+  background: transparent;
+  font: 700 1.9rem var(--font-ui);
+  cursor: pointer;
+}
+
+.pub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5rem 8.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pub-grid > li {
+  display: flex;
+}
+
+/* Column flow keeps every card's download row on the same baseline whatever the
+   summary length. */
+.pub-grid article {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  border: 0.2rem solid var(--grey-rule);
+  background: var(--white);
+  box-shadow: 0 0.6rem 2.2rem rgb(0 0 0 / 9%);
+}
+
+/* Design: the document cover is shown whole inside the card, so its own artwork
+   carries the visual weight instead of a card-level composition. */
+.pub-cover {
+  position: relative;
+  padding: 1.6rem 1.6rem 0;
+  background: var(--white);
+}
+
+/* Fill the frame — letterboxing looked like a broken white plate on photo covers. */
+.pub-cover img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1.41;
+  background: var(--grey-card);
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Project mark stands in when a document has no cover; it must not be stretched
+   to the portrait ratio the covers use. */
+.pub-cover img:not(.pub-cover__page) {
+  padding: 6rem 4rem;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Type and language sit in the body, as on the news cards, rather than over the
+   cover artwork they would otherwise hide. */
+.pub-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--teal-a11y);
+  font: 700 1.8rem var(--font-ui);
+  text-transform: uppercase;
+}
+
+.pub-card__meta b {
+  color: var(--eu-blue);
+  font: 700 1.5rem var(--font-ui);
+}
+
+.pub-card__body {
+  flex: 1;
+  padding: 3rem 2.5rem 2rem;
+}
+
+.pub-card__body h2 {
+  margin: 0 0 0.8rem;
+  color: var(--ink);
+  font-size: 3.1rem !important;
+  line-height: 1.3 !important;
+}
+
+.pub-card__body h2 a {
+  color: inherit;
+}
+
+.pub-card__body h2 a:hover,
+.pub-card__body h2 a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 0.2rem;
+}
+
+.pub-card__body > span {
+  display: block;
+  color: var(--teal-a11y);
+  font: 700 2.5rem var(--font-ui);
+}
+
+.pub-card__body small {
+  display: block;
+  margin-top: 1.5rem;
+  font-size: 3rem;
+  line-height: 1.55;
+  text-align: justify;
+  text-align-last: left;
+}
+
+.pub-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.6rem;
+}
+
+.pub-card__tags b {
+  padding: 0.5rem 1rem;
+  color: var(--eu-blue);
+  background: #e8f7f6;
+  font: 600 1.5rem var(--font-ui);
+}
+
+.pub-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 9.6rem;
+  padding: 1.5rem 2.5rem;
+  border-top: 0.2rem solid var(--grey-rule);
+  font: 700 1.7rem var(--font-ui);
+}
+
+.pub-card__foot time,
+.pub-card__undated {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pub-card__foot img {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+/* A document supplied without its file keeps its card, but says so instead of
+   offering a download that would 404. */
+.pub-card__foot em,
+.pub-card__undated {
+  color: #6b6b6b;
+  font: 600 1.6rem var(--font-ui);
+  font-style: normal;
+}
+
+.pub-card__foot a {
+  display: grid;
+  place-items: center;
+  min-width: 15rem;
+  min-height: 4.5rem;
+  padding: 1rem 1.5rem;
+  color: var(--white);
+  background: var(--teal);
+  font: 700 1.6rem var(--font-ui);
+  text-align: center;
+  text-decoration: none;
+}
+
+.pub-empty {
+  padding: 10rem 4rem;
+  text-align: center;
+  background: var(--grey-card);
+}
+
+.pub-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 7rem;
+}
+
+.pub-pagination button {
+  min-width: 3rem;
+  min-height: 3rem;
+  border: 0;
+  color: var(--teal-a11y);
+  background: transparent;
+  font: 600 2.2rem var(--font-ui);
+  cursor: pointer;
+}
+
+.pub-pagination button.is-active {
+  border-bottom: 0.3rem solid var(--eu-blue);
+  color: var(--eu-blue);
+}
+
+.pub-pagination > :first-child button,
+.pub-pagination > :last-child button {
+  color: var(--teal);
+  font-size: 3.2rem;
+}
+
+.pub-pagination button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+@media (min-width: 1100px) {
+  .pub-browser {
+    position: relative;
+    min-height: 0;
+  }
+
+  .pub-card__body {
+    padding: 2rem 1.5rem 1.5rem;
+  }
+}
+
+.pub-empty strong {
+  color: var(--eu-blue);
+  font: 700 3.2rem var(--font-display);
+}
+
+.pub-empty p {
+  margin: 1.5rem 0 3rem;
+  font-size: 2.1rem;
+}
+
+.pub-empty button {
+  padding: 1.4rem 2.4rem;
+  border: 0;
+  color: var(--white);
+  background: var(--teal-a11y);
+  font: 700 1.9rem var(--font-ui);
+}
+
+@media (max-width: 1099px) {
+  .page--publications {
+    --bleed: 0px;
+    --pad-x: var(--gutter);
+  }
+
+  .pub-hero {
+    min-height: 48rem;
+  }
+
+  .pub-hero__copy {
+    max-width: min(72rem, 62%);
+    padding: 6rem var(--pad-x) 5rem;
+  }
+
+  .pub-hero__art {
+    width: min(52%, 56rem);
+  }
+
+  .pub-hero h1 {
+    font-size: clamp(3.6rem, 6vw, 5.2rem);
+    letter-spacing: -0.08rem;
+    line-height: 1.08;
+  }
+
+  .pub-hero p {
+    max-width: none;
+    font-size: clamp(1.7rem, 2.4vw, 2rem);
+    line-height: 1.65;
+    text-align: left;
+    text-align-last: left;
+  }
+
+  .pub-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .pub-filters,
+  .pub-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 599px) {
+  .page--publications {
+    --pad-x: var(--gutter);
+  }
+
+  /* Stack: title first, then books under it — full teal, no side seam. */
+  .pub-hero {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding-top: 6rem;
+  }
+
+  .pub-hero__copy {
+    max-width: none;
+    padding: 4rem var(--pad-x) 2rem;
+  }
+
+  .pub-hero h1 {
+    max-width: 100%;
+    font-size: clamp(2.8rem, 8vw, 3.6rem);
+    letter-spacing: -0.08rem;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+
+  .pub-hero p {
+    max-width: none;
+    margin-top: 2.4rem;
+    font-size: 1.65rem;
+    line-height: 1.55;
+    text-align: left;
+  }
+
+  .pub-hero__art {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 28rem;
+    min-height: 28rem;
+  }
+
+  .pub-hero__art img,
+  .pub-hero__art .cms-editable img {
+    object-position: center bottom;
+  }
+
+  .pub-browser {
+    padding-top: 4.8rem;
+  }
+
+  .pub-search span {
+    font-size: max(1.6rem, 14px);
+    line-height: 1.3;
+  }
+
+  .pub-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .pub-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .pub-quick {
+    flex-wrap: wrap;
+    margin-right: 0;
+    margin-left: 0;
+    padding: 0 0 1rem;
+    overflow: visible;
+    mask-image: none;
+  }
+
+  .pub-quick button {
+    flex: 0 0 auto;
+  }
+
+  .pub-search {
+    width: 100%;
+  }
+
+  .pub-filters {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .pub-filter > button {
+    min-height: 6.4rem;
+    font-size: 1.8rem;
+  }
+
+  .pub-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pub-card__body h2 {
+    font-size: clamp(1.9rem, 4.5vw, 2.2rem) !important;
+  }
+
+  .pub-card__body small {
+    font-size: 1.65rem;
+    line-height: 1.55;
+  }
+
+  /* One card per row: a full-width portrait cover would fill the screen, so the
+     cover is capped in height and centred instead. */
+  .pub-cover img {
+    aspect-ratio: auto;
+    height: 28rem;
+    object-position: center;
+  }
+}
+
+@media (max-width: 430px) {
+  .pub-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .pub-summary button {
+    flex: 1 0 100%;
+  }
+}
+
+.page--publications .cms-editable {
+  position: relative;
+}
+
+.pub-title-row,
+.pub-btn-edit,
+.pub-edit-region {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+  max-width: 100%;
+}
+
+.pub-filter .pub-title-row {
+  align-items: stretch;
+}
+
+.pub-filter .pub-title-row > button {
+  flex: 1;
+}
+
+.page--publications .pub-list-cms {
+  display: contents;
+}
+
+.page--publications .cms-list-trigger {
+  white-space: nowrap;
+  width: max-content;
+  max-width: none;
+}
+
+body.cms-editing .page--publications .pub-edit-region {
+  outline: 1.5px dashed rgba(242, 168, 73, 0.85);
+  outline-offset: 8px;
+  margin: 0 0 1.2rem;
+}
+
+body.cms-editing .page--publications .pub-edit-region .cms-list-trigger-wrap {
+  position: static;
+  top: auto;
+  right: auto;
+  margin: 0 0 0.8rem auto;
+}
+
+.pub-filter-pencils {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.2rem 0 0;
+}
+
+body:not(.cms-editing) .pub-filter-pencils {
+  display: none;
+}
+
+.page--publications .pub-pencil.cms-chip-only,
+.page--publications .pub-title-row .cms-chip-only,
+.page--publications .pub-btn-edit .cms-chip-only,
+.page--publications .pub-filter-pencils .cms-chip-only,
+.page--publications .pub-search span .cms-chip-only,
+.page--publications .pub-summary .cms-chip-only,
+.page--publications .pub-empty .cms-chip-only,
+.page--publications .pub-pagination .cms-chip-only {
+  position: static;
+  display: inline-grid;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  vertical-align: middle;
+  margin-left: 0.6rem;
+  font-size: 1.4rem;
+}
+
+.pub-pagination .pub-btn-edit button {
+  min-width: 3rem;
+  min-height: 3rem;
+}
+

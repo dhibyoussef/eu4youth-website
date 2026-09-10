@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 90" role="img" aria-label="World Bank Group">
+  <circle cx="36" cy="45" r="28" fill="none" stroke="#1a5276" stroke-width="3"/>
+  <ellipse cx="36" cy="45" rx="12" ry="28" fill="none" stroke="#1a5276" stroke-width="2.2"/>
+  <path d="M10 45h52M14 30h44M14 60h44" fill="none" stroke="#1a5276" stroke-width="2"/>
+  <text x="78" y="54" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#002345">WORLD BANK GROUP</text>
+</svg>

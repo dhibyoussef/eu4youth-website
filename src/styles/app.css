@@ -1,0 +1,170 @@
+/* App shell. Page-level geometry lives with each page's stylesheet. */
+
+/* Do not put overflow-x:clip on .app-shell — it forces overflow-y to auto and
+   breaks position:sticky on the blue nav (nav is a direct child via header
+   display:contents). Clip horizontal bleed on main/pages instead. */
+.app-shell {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+.app-shell > main {
+  overflow-x: clip;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -20rem;
+  z-index: 100;
+  padding: 1.4rem 2.4rem;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--white);
+  background: var(--eu-blue);
+  transition: top 160ms ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ---------------------------------------------------------------
+   Interim styling for routes whose comps have not been rebuilt yet.
+   Uses the measured design tokens so the placeholder is not off-brand.
+   --------------------------------------------------------------- */
+.stub {
+  position: relative;
+  min-height: 60rem;
+  padding: 12rem var(--pad-x, var(--gutter)) 16rem;
+}
+
+.stub__eyebrow {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 2.3rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.stub__title {
+  margin-top: 1.6rem;
+  font-size: 9rem;
+  color: var(--eu-blue);
+}
+
+.stub__intro {
+  margin-top: 2.4rem;
+  max-width: 110rem;
+  font-weight: 500;
+  font-size: 3.2rem;
+  line-height: 1.35;
+}
+
+.stub__note {
+  margin-top: 4rem;
+  max-width: 110rem;
+  padding: 3rem 3.4rem;
+  font-weight: 500;
+  font-size: 2.4rem;
+  line-height: 1.4;
+  background: var(--grey-band);
+  border-left: 0.6rem solid var(--orange);
+}
+
+.stub__back {
+  margin-top: 4rem;
+  height: 7.31rem;
+  padding: 0 3rem;
+  font-size: 2.2rem;
+}
+
+.stub__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 4rem;
+}
+
+.stub__links a {
+  padding: 1.2rem 2.2rem;
+  border: 0.2rem solid var(--eu-blue);
+  color: var(--eu-blue);
+  font: 700 2rem var(--font-ui);
+}
+
+.stub__links a:hover,
+.stub__links a:focus-visible {
+  color: var(--white);
+  background: var(--eu-blue);
+}
+
+.route-loading {
+  display: grid;
+  /* Keep the footer below the initial viewport while a lazy route chunk loads.
+     Without this reservation, the footer paints immediately and then shifts by
+     the full page height when the route resolves. */
+  min-height: max(45rem, calc(100vh - 12rem));
+  place-items: center;
+  color: var(--eu-blue);
+  background: var(--white);
+  font: 700 3rem var(--font-display);
+}
+
+/* Bot honeypot: hidden visually and from assistive technology, but still part
+   of the form so simple spam scripts reveal themselves by filling it. */
+.form-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 1099px) {
+  .stub {
+    min-height: 0;
+    padding: 8rem var(--gutter) 12rem;
+  }
+
+  .stub__title {
+    font-size: clamp(4.8rem, 12vw, 9rem);
+    line-height: 1.08;
+  }
+
+  .stub__intro,
+  .stub__note {
+    max-width: none;
+    font-size: 2.8rem;
+  }
+
+  .stub__note {
+    padding: 2.4rem 2.6rem;
+  }
+
+  .stub__back {
+    width: 100%;
+    max-width: 52rem;
+    min-height: 6.6rem;
+    height: auto;
+  }
+
+  .route-loading {
+    min-height: max(36rem, calc(100dvh - 14rem));
+    padding: var(--gutter);
+    font-size: 2.6rem;
+    text-align: center;
+  }
+}

@@ -1,0 +1,78 @@
+/* Six project logos — used in the Accueil band and in the PROJETS dropdown, both
+   of which print the same art on flat white at the same sizes.
+
+   Each cell draws its own grey and colour art. It needs no plate behind it: both
+   bands are drawn in CSS now, so there is no printed watermark left to cover and
+   nothing for a cell background to disagree with.
+
+   The list is a grouping only: it must not establish a containing block or an
+   offset, because each cell's coordinates are measured from the strip's own
+   origin and resolve against the positioned ancestor that defines it. */
+.logos,
+.logos li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.logos__cell {
+  position: absolute;
+  display: block;
+}
+
+/* Each cell is the watermark's ink box, and the grey art is cropped to that same
+   box, so the art fills the cell edge to edge. It used to be inset 8px, which
+   shrank every logo inside its own footprint — while the band still carried the
+   printed watermark underneath, that read as a second, slightly larger copy of
+   the logo behind the one being drawn. */
+.logos__cell img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* The colour art comes from the project banners, which are not always the
+     exact proportion of the watermark, so it is fitted rather than stretched. */
+  object-fit: contain;
+  transition: opacity 200ms ease;
+}
+
+.logos__colour {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+}
+
+.logos__cell:hover .logos__colour,
+.logos__cell:focus-visible .logos__colour {
+  opacity: 1;
+}
+
+.logos__cell:hover .logos__grey,
+.logos__cell:focus-visible .logos__grey {
+  opacity: 0;
+}
+
+.logos__cell:focus-visible {
+  outline: 0.3rem solid var(--eu-blue);
+  outline-offset: 0.2rem;
+}
+
+/* Footer — full-colour logos on transparency, no grey/white swap. */
+.logos--footer .logos__footer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.footer .logos__cell {
+  background: transparent !important;
+}
+
+.footer .logos__cell:focus-visible {
+  outline-color: var(--white);
+}
